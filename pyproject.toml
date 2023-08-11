@@ -9,8 +9,32 @@ packages = [{include = "pyspark_data_mocker"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-
+pre-commit = "^3.3.3"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | venv
+  | build
+  | dist
+  | documentation
+)/
+'''
+
+[tool.mypy]
+ignore_missing_imports = true
+install_types = true
+non_interactive = true
+exclude = ["venv", ".git", "build", "dist", "documentation"]
+
+[tool.isort]
+profile = "black"
+line_length = 120
