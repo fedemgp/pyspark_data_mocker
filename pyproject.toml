@@ -11,6 +11,10 @@ packages = [{include = "pyspark_data_mocker"}]
 python = "^3.10"
 pre-commit = "^3.3.3"
 
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.0"
+pytest-mock = "^3.11.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
