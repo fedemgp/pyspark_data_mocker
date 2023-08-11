@@ -15,6 +15,11 @@ pre-commit = "^3.3.3"
 pytest = "^7.4.0"
 pytest-mock = "^3.11.1"
 
+
+[tool.poetry.group.doc.dependencies]
+byexample = "^10.5.6"
+mkdocs = "^1.5.2"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
