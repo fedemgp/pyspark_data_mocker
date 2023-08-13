@@ -39,6 +39,16 @@ jobs:
 
       - name: Install dependencies
         run: poetry install
+      - name: Linter
+        run: |
+          echo "Running black"
+          poetry run black --check --config ./pyproject.toml .
+          echo "Running isort"
+          poetry run isort -c --sp ./pyproject.toml .
+          echo "Running flake8"
+          poetry run flake8 --config ./.flake8 .
+          echo "Running mypy"
+          poetry run mypy --config-file ./pyproject.toml .
       - name: Test
         run: |
           poetry run pytest -v
