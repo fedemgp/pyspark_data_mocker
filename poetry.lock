@@ -412,6 +412,17 @@ files = [
 ]
 
 [[package]]
+name = "py4j"
+version = "0.10.9.5"
+description = "Enables Python programs to dynamically access arbitrary Java objects"
+optional = false
+python-versions = "*"
+files = [
+    {file = "py4j-0.10.9.5-py2.py3-none-any.whl", hash = "sha256:52d171a6a2b031d8a5d1de6efe451cf4f5baff1a2819aabc3741c8406539ba04"},
+    {file = "py4j-0.10.9.5.tar.gz", hash = "sha256:276a4a3c5a2154df1860ef3303a927460e02e97b047dc0a47c1c3fb8cce34db6"},
+]
+
+[[package]]
 name = "pygments"
 version = "2.16.1"
 description = "Pygments is a syntax highlighting package written in Python."
@@ -424,6 +435,25 @@ files = [
 
 [package.extras]
 plugins = ["importlib-metadata"]
+
+[[package]]
+name = "pyspark"
+version = "3.2.4"
+description = "Apache Spark Python API"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "pyspark-3.2.4.tar.gz", hash = "sha256:aaa592f2f03fbef34c91bfcfee389cf53cbff6662ae47bd5f700573ed9ed61f2"},
+]
+
+[package.dependencies]
+py4j = "0.10.9.5"
+
+[package.extras]
+ml = ["numpy (>=1.7)"]
+mllib = ["numpy (>=1.7)"]
+pandas-on-spark = ["numpy (>=1.14)", "pandas (>=0.23.2)", "pyarrow (>=1.0.0)"]
+sql = ["pandas (>=0.23.2)", "pyarrow (>=1.0.0)"]
 
 [[package]]
 name = "pyte"
@@ -701,4 +731,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "3350719699ac0c1f48d142d500e8dbd60424e6a7dd508da87490fe9bc9397fe9"
+content-hash = "9c547cddd1eb3b4a489baba0f66bd95b669ba967975d9ad9f43f1567f7e0859d"
