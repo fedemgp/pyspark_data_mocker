@@ -9,12 +9,16 @@ packages = [{include = "pyspark_data_mocker"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-pre-commit = "^3.3.3"
 pyspark = "==3.2.*"
 
-[tool.poetry.group.test.dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
 pytest-mock = "^3.11.1"
+pre-commit = "^3.3.3"
+black = "==22.3.0"
+flake8 = "==5.0.4"
+mypy = "1.5.0"
+isort = "5.12.0"
 
 
 [tool.poetry.group.doc.dependencies]
@@ -32,7 +36,7 @@ exclude = '''
 /(
     \.git
   | \.mypy_cache
-  | venv
+  | .venv
   | build
   | dist
   | documentation
@@ -43,7 +47,7 @@ exclude = '''
 ignore_missing_imports = true
 install_types = true
 non_interactive = true
-exclude = ["venv", ".git", "build", "dist", "documentation"]
+exclude = [".venv", ".git", "build", "dist", "documentation"]
 
 [tool.isort]
 profile = "black"

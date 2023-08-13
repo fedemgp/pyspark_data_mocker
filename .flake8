@@ -1,4 +1,4 @@
 [flake8]
 max-line-length = 120
 extend-ignore = E203,BLK100
-exclude = .git,build,dist,venv,documentation
+exclude = .git,build,dist,.venv,documentation

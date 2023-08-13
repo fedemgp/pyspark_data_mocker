@@ -1,4 +1,4 @@
-exclude: 'documentation|.git'
+exclude: 'documentation|.git|.venv'
 default_stages: [commit]
 fail_fast: true
 
@@ -21,7 +21,7 @@ repos:
         args: ["--config", "./pyproject.toml"]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.961
+    rev: v1.5.0
     hooks:
       - id: mypy
         additional_dependencies: [types-all]
@@ -29,7 +29,7 @@ repos:
         args: ["--config-file", "./pyproject.toml"]
 
   - repo: https://github.com/pycqa/flake8
-    rev: 4.0.1
+    rev: 5.0.4
     hooks:
       - id: flake8
         additional_dependencies:
