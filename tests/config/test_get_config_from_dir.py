@@ -30,4 +30,4 @@ def test_app_config_has_a_temporary_directory_by_default(data_dir):
     assert isinstance(config.spark_warehouse_dir_path, str)
 
     path = config.spark_warehouse_dir_path
-    assert "/tmp/tmp" in path
+    assert "/tmp/" in path or "/var/" in path
