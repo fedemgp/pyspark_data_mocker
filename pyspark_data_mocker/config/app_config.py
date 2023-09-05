@@ -1,4 +1,5 @@
 import dataclasses
+import pathlib
 from tempfile import TemporaryDirectory
 from typing import Optional, Union
 
@@ -12,6 +13,12 @@ class AppConfig:
     enable_hive: bool
     warehouse_dir: Dir
     delta_configuration: Optional["DeltaConfig"]
+
+    @property
+    def spark_warehouse_dir_path(self) -> str:
+        if isinstance(self.warehouse_dir, TemporaryDirectory):
+            return str(pathlib.Path(self.warehouse_dir.name, "spark_warehouse"))
+        return str(pathlib.Path(self.warehouse_dir, "spark_warehouse"))
 
 
 @dataclasses.dataclass

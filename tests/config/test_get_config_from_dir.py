@@ -11,7 +11,8 @@ def test_get_config_returns_a_dataclass_fully_configured(data_dir):
     assert isinstance(config, AppConfig)
     assert isinstance(config.warehouse_dir, str)
     assert config.app_name == "test"
-    assert config.warehouse_dir == "/tmp/foo/bar"
+    assert config.warehouse_dir == "./tmp/foo/bar"
+    assert config.spark_warehouse_dir_path == "tmp/foo/bar/spark_warehouse"
     assert config.number_of_cores == 1
     assert config.enable_hive
     assert config.delta_configuration.scala_version == "2.12"
@@ -26,3 +27,7 @@ def test_app_config_has_a_temporary_directory_by_default(data_dir):
 
     assert isinstance(config, AppConfig)
     assert isinstance(config.warehouse_dir, tempfile.TemporaryDirectory)
+    assert isinstance(config.spark_warehouse_dir_path, str)
+
+    path = config.spark_warehouse_dir_path
+    assert "/tmp/" in path or "/var/" in path
