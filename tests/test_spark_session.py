@@ -1,3 +1,5 @@
+from pyspark.sql import SparkSession
+
 from pyspark_data_mocker.config import AppConfig
 from pyspark_data_mocker.config.app_config import DeltaConfig
 from pyspark_data_mocker.spark_session import SparkTestSession
@@ -31,6 +33,9 @@ def test_spark_session_without_delta():
     assert spark_conf.get("spark.worker.ui.retainedDrivers") == "1"
     # Hive is not enabled
     assert spark_conf.get("spark.sql.catalogImplementation") == "in-memory"
+    spark.session.stop()
+    # TODO: this is way to ugly but i need it because if not the next tests will use delta configuration
+    SparkSession.builder._options = {}
 
 
 def test_spark_session_with_delta():
@@ -69,3 +74,6 @@ def test_spark_session_with_delta():
     assert spark_conf.get("spark.worker.ui.retainedDrivers") == "1"
     # Hive is enabled
     assert spark_conf.get("spark.sql.catalogImplementation") == "hive"
+    spark.session.stop()
+    # TODO: this is way to ugly but i need it because if not the next tests will use delta configuration
+    SparkSession.builder._options = {}
