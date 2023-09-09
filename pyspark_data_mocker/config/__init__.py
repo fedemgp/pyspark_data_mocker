@@ -1,3 +1,4 @@
+import pathlib
 from pathlib import Path
 from typing import Union
 
@@ -21,3 +22,11 @@ def get_config_from_dir(filepath: Union[str, Path]) -> AppConfig:
 
     config = config_schema.validate(config)
     return from_dict(data_class=AppConfig, data=config)
+
+
+def default_config() -> AppConfig:
+    """
+    :return: Returns a default AppConfig class with basic configuration
+    """
+    default_config_path = pathlib.Path(pathlib.Path(__file__).parent, "default_config.yaml")
+    return get_config_from_dir(default_config_path)

@@ -3,19 +3,18 @@ from pathlib import Path
 import pyspark.sql.utils
 import pytest
 from chispa import assert_df_equality
+from pyspark.sql import SparkSession
 
-from pyspark_data_mocker import utils
+from pyspark_data_mocker import config
 from pyspark_data_mocker.datalake_builder import DataLakeBuilder
 from pyspark_data_mocker.spark_session import SparkTestSession
 
 
-def test_build_datalake_using_dsl(data_dir):
-    spark_test = SparkTestSession(utils.default_config())
-    builder = DataLakeBuilder(spark_test)
-    spark = spark_test.session
+def test_build_datalake_using_dsl(data_dir, data_mocker):
+    spark = SparkSession.builder.getOrCreate()
     base_path = Path(data_dir, "basic_datalake", "bar")
-    builder = (
-        builder.with_db("db1")
+    (
+        data_mocker.with_db("db1")
         .with_table("a_table_name", fmt="csv", path=Path(base_path, "courses.csv"), db_name="db1")
         .with_table("a_table_with_students", fmt="csv", path=Path(base_path, "students.csv"))
         .run()
@@ -39,14 +38,11 @@ def test_build_datalake_using_dsl(data_dir):
         schema=["id", "first_name", "last_name", "email", "gender"],
     )
     assert_df_equality(df, expected)
-    builder.cleanup()
     assert True
 
 
 def test_creating_table_with_non_existing_db_raises(data_dir):
-    spark_test = SparkTestSession(utils.default_config())
-    builder = DataLakeBuilder(spark_test)
-    spark = spark_test.session  # noqa: F841
+    builder = DataLakeBuilder(SparkTestSession(config.default_config()))
     base_path = Path(data_dir, "basic_datalake", "bar")
     builder = builder.with_table("a_table_name", fmt="csv", path=Path(base_path, "courses.csv"), db_name="db1")
 
