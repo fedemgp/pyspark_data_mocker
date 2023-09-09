@@ -1,6 +1,6 @@
 from typing import List, Optional, Set
 
-from pyspark_data_mocker import utils
+from pyspark_data_mocker import config, utils
 from pyspark_data_mocker.config import AppConfig
 from pyspark_data_mocker.spark_session import SparkTestSession
 from pyspark_data_mocker.utils import PathLike
@@ -85,7 +85,7 @@ class DataLakeBuilder:
         """
         datalake_dir = utils.to_path(datalake_dir)
         if not app_config:
-            app_config = utils.default_config()
+            app_config = config.default_config()
         if not datalake_dir.exists():
             raise ValueError(f"The path provided '{datalake_dir}' does not exists")
 

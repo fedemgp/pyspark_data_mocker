@@ -1,5 +1,4 @@
 import pathlib
-from pathlib import Path
 
 import pytest
 from chispa import assert_df_equality
@@ -8,9 +7,8 @@ from pyspark.sql import SparkSession
 from pyspark_data_mocker.datalake_builder import DataLakeBuilder
 
 
-def test_load_from_dir_creates_a_database_per_directory(data_dir):
-    # It is needed to keep a reference of the builder to avoid a clean of the GC and avoid the temporal dir to be erased
-    builder = DataLakeBuilder.load_from_dir(Path(data_dir, "basic_datalake"))
+def test_load_from_dir_creates_a_database_per_directory(data_mocker_load_from_dir, data_dir):
+    data_mocker_load_from_dir(pathlib.Path(data_dir, "basic_datalake"))
     # This will use the same spark session as the one configured in the DataLakeBuilder
     spark = SparkSession.builder.getOrCreate()
 
@@ -40,12 +38,10 @@ def test_load_from_dir_creates_a_database_per_directory(data_dir):
         schema=["namespace", "tableName", "isTemporary"],
     )
     assert_df_equality(df, expected, ignore_nullable=True)
-    builder.cleanup()
 
 
-def test_load_from_dir_creates_a_table_for_each_file_in_the_given_database(data_dir):
-    builder = DataLakeBuilder.load_from_dir(Path(data_dir, "basic_datalake"))
-    # This will
+def test_load_from_dir_creates_a_table_for_each_file_in_the_given_database(data_mocker_load_from_dir, data_dir):
+    data_mocker_load_from_dir(pathlib.Path(data_dir, "basic_datalake"))
     spark = SparkSession.builder.getOrCreate()
 
     df = spark.table("bar.courses")
@@ -84,7 +80,6 @@ def test_load_from_dir_creates_a_table_for_each_file_in_the_given_database(data_
         schema=["id", "student_id", "course_id", "date", "note"],
     )
     assert_df_equality(df, expected)
-    builder.cleanup()
 
 
 def test_load_from_dir_raises_if_path_is_not_valid():
@@ -104,8 +99,10 @@ def test_load_from_dir_raises_if_path_is_not_a_directory(data_dir):
     )
 
 
-def test_load_from_dir_creates_tables_in_default_database_if_it_is_in_root_directory(data_dir):
-    builder = DataLakeBuilder.load_from_dir(Path(data_dir, "datalake_with_default_tables"))
+def test_load_from_dir_creates_tables_in_default_database_if_it_is_in_root_directory(
+    data_mocker_load_from_dir, data_dir
+):
+    data_mocker_load_from_dir(pathlib.Path(data_dir, "datalake_with_default_tables"))
     # This will
     spark = SparkSession.builder.getOrCreate()
 
@@ -149,4 +146,3 @@ def test_load_from_dir_creates_tables_in_default_database_if_it_is_in_root_direc
     # This is the same as "select * from exams"
     df = spark.table("default.exams")
     assert_df_equality(df, expected)
-    builder.cleanup()
