@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyspark-data-mocker"
-version = "0.1.1"
+version = "0.1.2"
 description = "Mock a datalake easily to be able to test your pyspark data application"
 authors = ["Federico Gomez <fedemgp@gmail.com>"]
 license = "GPL-3.0"
@@ -11,9 +11,10 @@ keywords = ["pyspark", "tests", "data", "mocker"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-pyspark = "==3.2.*"
 schema = "^0.7.5"
 dacite = "^1.8.1"
+pyyaml = "^6.0.1"
+pyspark = "^3.2.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"

@@ -590,13 +590,13 @@ files = [
 
 [[package]]
 name = "py4j"
-version = "0.10.9.5"
+version = "0.10.9.3"
 description = "Enables Python programs to dynamically access arbitrary Java objects"
 optional = false
 python-versions = "*"
 files = [
-    {file = "py4j-0.10.9.5-py2.py3-none-any.whl", hash = "sha256:52d171a6a2b031d8a5d1de6efe451cf4f5baff1a2819aabc3741c8406539ba04"},
-    {file = "py4j-0.10.9.5.tar.gz", hash = "sha256:276a4a3c5a2154df1860ef3303a927460e02e97b047dc0a47c1c3fb8cce34db6"},
+    {file = "py4j-0.10.9.3-py2.py3-none-any.whl", hash = "sha256:04f5b06917c0c8a81ab34121dda09a2ba1f74e96d59203c821d5cb7d28c35363"},
+    {file = "py4j-0.10.9.3.tar.gz", hash = "sha256:0d92844da4cb747155b9563c44fc322c9a1562b3ef0979ae692dbde732d784dd"},
 ]
 
 [[package]]
@@ -637,16 +637,16 @@ plugins = ["importlib-metadata"]
 
 [[package]]
 name = "pyspark"
-version = "3.2.4"
+version = "3.2.1"
 description = "Apache Spark Python API"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "pyspark-3.2.4.tar.gz", hash = "sha256:aaa592f2f03fbef34c91bfcfee389cf53cbff6662ae47bd5f700573ed9ed61f2"},
+    {file = "pyspark-3.2.1.tar.gz", hash = "sha256:0b81359262ec6e9ac78c353344e7de026027d140c6def949ff0d80ab70f89a54"},
 ]
 
 [package.dependencies]
-py4j = "0.10.9.5"
+py4j = "0.10.9.3"
 
 [package.extras]
 ml = ["numpy (>=1.7)"]
@@ -955,4 +955,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "7ec492b6d7d4bee17c39511167b605fdb1b8868a640eba7dccaa6292a7563391"
+content-hash = "c1c01b3d5793d57bad04697e0f5485127ddaad9859d9780fd6bd668ec028e9b4"

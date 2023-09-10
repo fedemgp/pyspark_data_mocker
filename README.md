@@ -1,5 +1,5 @@
 # pyspark-data-mocker
-`pyspark-data-mocker` is a testing tool that facilitates the burden of set up an entire datalake, so you can test
+`pyspark-data-mocker` is a testing tool that facilitates the burden of setting up a desired datalake, so you can test
 easily the behavior of your data application. It configures also the spark session to optimize it for testing
 purpose.
 
@@ -9,8 +9,8 @@ pip install pyspark-data-mocker
 ```
 
 ## Usage
-`pyspark-data-mocker` searchs the directory you provide in order to seek and load files that can be interpreted as
-tables, that will live inside the current datalake. That datalake will contain certain database depending on the folders
+`pyspark-data-mocker` searches the directory you provide in order to seek and load files that can be interpreted as
+tables, storing them inside the datalake. That datalake will contain certain databases depending on the folders
 inside the root directory. For example, let's take a look into the `basic_datalake`
 
 ```bash
@@ -25,19 +25,19 @@ tests/data/basic_datalake
 2 directories, 3 files
 ```
 
-This file hierarchy will be respected in the further datalake when loaded:  each subfolder will be considered as
-spark's databases, and each file will be loaded as table, using the filename to name the table.
+This file hierarchy will be respected in the further datalake when loaded:  each sub-folder will be considered as
+spark database, and each file will be loaded as table, using the filename to name the table.
 
-How can we load then using `pyspark-data-mocker`? Really simple!
+How can we load them using `pyspark-data-mocker`? Really simple!
 
 ```python
 >>> from pyspark_data_mocker import DataLakeBuilder
 >>> builder = DataLakeBuilder.load_from_dir("./tests/data/basic_datalake")  # byexample: +timeout=20 +pass
 ```
 
+And that's it! you will now have in that execution context a datalake with the structure defined in the folder
+`basic_datalake`. Let's take a closer look by running some queries.
 
-And that's it! you will now have in that context a datalake with the structure defined in the folder `basic_datalake`.
-Let's take a closer look on the datalake by running some queries.
 ```python
 >>> from pyspark.sql import SparkSession
 >>> spark = SparkSession.builder.getOrCreate()
@@ -86,6 +86,9 @@ We have the `default` database (which came for free when instantiating spark), a
 +---+----------+---------+--------------------+------+
 
 ```
+
+Note how it is already filled with the data each CSV file has! The tool supports all kind of files: `csv`, `parquet`,
+`csv`, `json`. The application will infer which format to use by looking the file extension.
 
 ```python
 >>> spark.sql("SHOW TABLES IN foo").show()
