@@ -1,7 +1,6 @@
 from typing import List, Optional, Set
 
 from pyspark_data_mocker import config, utils
-from pyspark_data_mocker.config import AppConfig
 from pyspark_data_mocker.spark_session import SparkTestSession
 from pyspark_data_mocker.utils import PathLike
 
@@ -68,7 +67,7 @@ class DataLakeBuilder:
             self.spark.sql(f"DROP DATABASE IF EXISTS {db}")
 
     @staticmethod
-    def load_from_dir(datalake_dir: PathLike, app_config: Optional[AppConfig] = None) -> "DataLakeBuilder":
+    def load_from_dir(datalake_dir: PathLike, app_config_path: Optional[PathLike] = None) -> "DataLakeBuilder":
         """
         Navigates over the <datalake_dir> to create the datalake automatically. The file structure needs to be like
         this:
@@ -81,10 +80,12 @@ class DataLakeBuilder:
 
         :param datalake_dir: Directory that contains the datalake definition (table-like files to load as tables and/or
                              folders that will be considered as databases)
-        :param app_config:   Optional argument to configure the spark session to use
+        :param app_config_path:   Optional argument with a path of a yaml file to configure the spark session to use
         """
         datalake_dir = utils.to_path(datalake_dir)
-        if not app_config:
+        if app_config_path:
+            app_config = config.get_config_from_dir(app_config_path)
+        else:
             app_config = config.default_config()
         if not datalake_dir.exists():
             raise ValueError(f"The path provided '{datalake_dir}' does not exists")
