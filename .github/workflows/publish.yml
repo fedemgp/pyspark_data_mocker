@@ -1,0 +1,21 @@
+name: Deploy
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  build:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Publish Package
+        uses: celsiusnarhwal/poetry-publish@v2
+        with:
+          python-version: 3.8
+          poetry-version: 1.5.1
+          token: ${{ secrets.PYPI_TOKEN }}
+          build: true
