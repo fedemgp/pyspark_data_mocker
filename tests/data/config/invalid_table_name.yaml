@@ -1,0 +1,3 @@
+barcourses:
+  id: int
+  course_name: string

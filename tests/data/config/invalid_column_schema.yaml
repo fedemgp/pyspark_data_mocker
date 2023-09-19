@@ -1,0 +1,3 @@
+bar.courses:
+  id: 1
+  course_name: string

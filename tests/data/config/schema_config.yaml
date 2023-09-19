@@ -1,0 +1,9 @@
+bar.courses:
+  id: int
+  course_name: string
+bar.students:
+  id: int
+  first_name: string
+  last_name: string
+  email: string
+  gender: string
