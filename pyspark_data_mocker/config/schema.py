@@ -30,6 +30,7 @@ config_schema = schema.Schema(
     {
         "app_name": schema.And(str, len),
         "number_of_cores": schema.And(schema.Use(int), range_between(1, 8)),
+        schema.Optional("schema_config_file_name", default="schema_config.yaml"): str,
         schema.Optional("enable_hive", default=False): bool,
         schema.Optional("warehouse_dir", default=_get_tmp_dir): schema.Or(str, tempfile.TemporaryDirectory),
         schema.Optional("delta_configuration"): {

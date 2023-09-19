@@ -1,3 +1,4 @@
+import pathlib
 from typing import List, Optional, Set
 
 from pyspark_data_mocker import config, utils
@@ -6,11 +7,16 @@ from pyspark_data_mocker.utils import PathLike
 
 
 class DataLakeBuilder:
-    def __init__(self, spark_test: SparkTestSession):
+    def __init__(self, spark_test: SparkTestSession, schema_configuration: Optional[PathLike] = None):
         self.dbs: Set[str] = set()
         self.tables: List[dict] = list()
         self.spark_test = spark_test
         self.spark = spark_test.session
+
+        self.schema: Optional[dict] = None
+        if schema_configuration:
+            schema_configuration = utils.to_path(schema_configuration)
+            self.schema = config.get_schema_configuration_from_dir(schema_configuration)
 
     def with_db(self, name: str) -> "DataLakeBuilder":
         """
@@ -54,8 +60,12 @@ class DataLakeBuilder:
         for table in self.tables:
             # TODO: configure schema infering
             opts = dict(header=True, inferSchema=False)
-            df = self.spark.read.format(table["format"]).options(**opts).load(table["path"])
-            df.write.mode("overwrite").saveAsTable(f"{table['db_name']}.{table['table_name']}")
+            table_full_name = f"{table['db_name']}.{table['table_name']}"
+            reader = self.spark.read
+            if self.schema and table_full_name in self.schema:
+                reader = reader.schema(utils.dict_to_ddl_string(self.schema[table_full_name]))
+            df = reader.format(table["format"]).options(**opts).load(table["path"])
+            df.write.mode("overwrite").saveAsTable(table_full_name)
 
         return self
 
@@ -94,9 +104,14 @@ class DataLakeBuilder:
             raise ValueError(f"The path '{datalake_dir}' is not a directory with a delta lake data")
 
         spark_test = SparkTestSession(app_config)
-        builder = DataLakeBuilder(spark_test)
+        schema_config_path = pathlib.Path(datalake_dir, app_config.schema_config_file_name)
+        schema_config = schema_config_path if schema_config_path.exists() else None
+        builder = DataLakeBuilder(spark_test, schema_configuration=schema_config)
 
         for d in datalake_dir.iterdir():
+            if d.name == app_config.schema_config_file_name:
+                continue
+
             if d.is_file():
                 table_name, extension = d.name.split(".")
                 builder = builder.with_table(table_name=table_name, fmt=extension, path=d.resolve())

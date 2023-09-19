@@ -1,5 +1,7 @@
+import datetime
 import pathlib
 
+import pyspark.sql.types as T
 import pytest
 from chispa import assert_df_equality
 from pyspark.sql import SparkSession
@@ -145,4 +147,45 @@ def test_load_from_dir_creates_tables_in_default_database_if_it_is_in_root_direc
 
     # This is the same as "select * from exams"
     df = spark.table("default.exams")
+    assert_df_equality(df, expected)
+
+
+def test_load_from_dir_respect_the_schema_configured_in_yaml_file(data_mocker_load_from_dir, data_dir):
+    builder = data_mocker_load_from_dir(pathlib.Path(data_dir, "datalake_with_config_schema"))  # noqa: F841
+    spark = SparkSession.builder.getOrCreate()
+
+    df = spark.table("bar.courses")
+    schema = T.StructType(
+        [
+            T.StructField("id", T.IntegerType(), True),
+            T.StructField("course_name", T.StringType(), True),
+        ]
+    )
+    expected = spark.createDataFrame(
+        data=[(1, "Algorithms 1"), (2, "Algorithms 2"), (3, "Calculus 1")],
+        schema=schema,
+    )
+    assert_df_equality(df, expected)
+
+    df = spark.table("bar.students")
+    schema = T.StructType(
+        [
+            T.StructField("id", T.IntegerType(), True),
+            T.StructField("first_name", T.StringType(), True),
+            T.StructField("last_name", T.StringType(), True),
+            T.StructField("email", T.StringType(), True),
+            T.StructField("gender", T.StringType(), True),
+            T.StructField("birth_date", T.DateType(), True),
+        ]
+    )
+    expected = spark.createDataFrame(
+        data=[
+            (1, "Shirleen", "Dunford", "sdunford0@amazonaws.com", "Female", datetime.date(1978, 8, 1)),
+            (2, "Niko", "Puckrin", "npuckrin1@shinystat.com", "Male", datetime.date(2000, 11, 28)),
+            (3, "Sergei", "Barukh", "sbarukh2@bizjournals.com", "Male", datetime.date(1992, 1, 20)),
+            (4, "Sal", "Maidens", "smaidens3@senate.gov", "Male", datetime.date(2003, 12, 14)),
+            (5, "Cooper", "MacGuffie", "cmacguffie4@ibm.com", "Male", datetime.date(2000, 3, 7)),
+        ],
+        schema=schema,
+    )
     assert_df_equality(df, expected)
