@@ -17,6 +17,7 @@ def test_config_schema_returns_successful_configuration():
         "number_of_cores": 1,
         "enable_hive": True,
         "warehouse_dir": "/tmp/foo/bar",
+        "schema_config_file_name": "schema_config.yaml",
         "delta_configuration": {
             "scala_version": "2.11",
             "delta_version": "2.0.2",
@@ -31,6 +32,7 @@ def test_config_schema_returns_successful_configuration():
             "number_of_cores": 1,
             "enable_hive": True,
             "warehouse_dir": "/tmp/foo/bar",
+            "schema_config_file_name": "schema_config.yaml",
             "delta_configuration": {
                 "scala_version": "2.11",
                 "delta_version": "2.0.2",
@@ -46,6 +48,7 @@ def test_config_schema_sets_some_default_values(mocked_temp_dir):
     expected_config = {
         "app_name": "foo",
         "number_of_cores": 1,
+        "schema_config_file_name": "schema_config.yaml",
         "enable_hive": False,  # default is False
         "warehouse_dir": "/tmp/temp_dir",  # default will be a TemporaryDirectory that needs to be transformed to string
         # Delta doesn't have a default configuration

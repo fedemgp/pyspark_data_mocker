@@ -12,7 +12,8 @@ class AppConfig:
     number_of_cores: int
     enable_hive: bool
     warehouse_dir: Dir
-    delta_configuration: Optional["DeltaConfig"]
+    schema_config_file_name: str
+    delta_configuration: Optional["DeltaConfig"] = None
 
     @property
     def spark_warehouse_dir_path(self) -> str:
