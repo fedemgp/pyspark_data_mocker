@@ -14,8 +14,8 @@ def test_function_returns_a_dictionary_when_config_file_is_correct(data_dir):
     assert "bar.courses" in config
     assert config["bar.courses"] == {"id": "int", "course_name": "string"}
 
-    assert "bar.students" in config
-    assert config["bar.students"] == {
+    assert "bar.school_students" in config
+    assert config["bar.school_students"] == {
         "id": "int",
         "first_name": "string",
         "last_name": "string",

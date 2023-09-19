@@ -54,7 +54,7 @@ def get_schema_configuration_from_dir(filepath: PathLike) -> dict:
     config_validated = schema_validator.validate(config)
 
     for table_name in config_validated.keys():
-        if not re.search(r"^[a-z]+\.[a-z]+$", table_name, re.IGNORECASE):
+        if not re.search(r"^[\w_-]+\.[\w_-]+$", table_name, re.IGNORECASE):
             raise ValueError(
                 f"Invalid parameter: Table '{table_name}' name must follow the form <database>.<table> name convention"
             )
