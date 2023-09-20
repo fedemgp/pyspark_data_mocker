@@ -42,4 +42,4 @@ jobs:
           sudo apt-get install tree
       - name: byexample
         run: |
-          poetry run byexample -l shell,python ./integration/${{ matrix.pyspark-version.test_folder }}/*.md
+          poetry run byexample -l shell,python --fail-fast ./integration/${{ matrix.pyspark-version.test_folder }}/*.md
