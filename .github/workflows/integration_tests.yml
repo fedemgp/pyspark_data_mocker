@@ -38,7 +38,7 @@ jobs:
       - name: Install dependencies
         run: |
           poetry install
-          pip install pyspark==${{ matrix.pyspark-version.version }}
+          poetry add pyspark==${{ matrix.pyspark-version.version }}
           sudo apt-get install tree
       - name: byexample
         run: |
