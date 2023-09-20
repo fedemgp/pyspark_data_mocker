@@ -4,7 +4,7 @@
 
 ```bash
 $ pip freeze | grep pyspark
-pyspark==3.3.3
+pyspark==3.4.1
 <...>
 ```
 
@@ -31,7 +31,6 @@ tests/data/datalake_with_config_schema
 ```python
 >>> from pyspark.sql import SparkSession
 >>> spark = SparkSession.builder.getOrCreate()
-<...>Using an existing Spark session<...>
 >>> spark.sql("SHOW DATABASES").show()
 +---------+
 |namespace|
@@ -114,7 +113,7 @@ tests/data/datalake_with_config_schema
 |course_name|     string|
 |   Database|        bar|
 |      Table|    courses|
-| Created By|Spark 3.3.3|
+| Created By|Spark 3.4.1|
 |       Type|    MANAGED|
 +-----------+-----------+
 ```
@@ -133,7 +132,7 @@ tests/data/datalake_with_config_schema
 |birth_date|       date|
 |  Database|        bar|
 |     Table|   students|
-|Created By|Spark 3.3.3|
+|Created By|Spark 3.4.1|
 |      Type|    MANAGED|
 +----------+-----------+
 ```
@@ -151,7 +150,7 @@ tests/data/datalake_with_config_schema
 |      note|     string|
 |  Database|        foo|
 |     Table|      exams|
-|Created By|Spark 3.3.3|
+|Created By|Spark 3.4.1|
 |      Type|    MANAGED|
 +----------+-----------+
 ```

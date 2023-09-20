@@ -4,34 +4,32 @@
 
 ```bash
 $ pip freeze | grep pyspark
-pyspark==3.3.3
+pyspark==3.4.1
 <...>
 ```
 
 ```bash
-$ tree tests/data/datalake_with_config_schema -n --charset=ascii  # byexample: +rm=~
-tests/data/datalake_with_config_schema
+$ tree tests/data/basic_datalake -n --charset=ascii  # byexample: +rm=~
+tests/data/basic_datalake
 |-- bar
 |   |-- courses.csv
 |   `-- students.csv
-|-- foo
-|   `-- exams.csv
-`-- schema_config.yaml
+`-- foo
+    `-- exams.csv
 ~
-2 directories, 4 files
+2 directories, 3 files
 ```
 
 ## Execution
 ```python
 >>> from pyspark_data_mocker import DataLakeBuilder
->>> builder = DataLakeBuilder.load_from_dir("./tests/data/datalake_with_config_schema")  # byexample: +timeout=20
+>>> builder = DataLakeBuilder.load_from_dir("./tests/data/basic_datalake")  # byexample: +timeout=20
 <...>
 ```
 
 ```python
 >>> from pyspark.sql import SparkSession
 >>> spark = SparkSession.builder.getOrCreate()
-<...>Using an existing Spark session<...>
 >>> spark.sql("SHOW DATABASES").show()
 +---------+
 |namespace|
@@ -64,15 +62,15 @@ tests/data/datalake_with_config_schema
 
 >>> students = spark.table("bar.students")
 >>> students.show()
-+---+----------+---------+--------------------+------+----------+
-| id|first_name|last_name|               email|gender|birth_date|
-+---+----------+---------+--------------------+------+----------+
-|  1|  Shirleen|  Dunford|sdunford0@amazona...|Female|1978-08-01|
-|  2|      Niko|  Puckrin|npuckrin1@shinyst...|  Male|2000-11-28|
-|  3|    Sergei|   Barukh|sbarukh2@bizjourn...|  Male|1992-01-20|
-|  4|       Sal|  Maidens|smaidens3@senate.gov|  Male|2003-12-14|
-|  5|    Cooper|MacGuffie| cmacguffie4@ibm.com|  Male|2000-03-07|
-+---+----------+---------+--------------------+------+----------+
++---+----------+---------+--------------------+------+
+| id|first_name|last_name|               email|gender|
++---+----------+---------+--------------------+------+
+|  1|  Shirleen|  Dunford|sdunford0@amazona...|Female|
+|  2|      Niko|  Puckrin|npuckrin1@shinyst...|  Male|
+|  3|    Sergei|   Barukh|sbarukh2@bizjourn...|  Male|
+|  4|       Sal|  Maidens|smaidens3@senate.gov|  Male|
+|  5|    Cooper|MacGuffie| cmacguffie4@ibm.com|  Male|
++---+----------+---------+--------------------+------+
 ```
 
 ```python
@@ -110,11 +108,11 @@ tests/data/datalake_with_config_schema
 +-----------+-----------+
 |   col_name|  data_type|
 +-----------+-----------+
-|         id|        int|
+|         id|     string|
 |course_name|     string|
 |   Database|        bar|
 |      Table|    courses|
-| Created By|Spark 3.3.3|
+| Created By|Spark 3.4.1|
 |       Type|    MANAGED|
 +-----------+-----------+
 ```
@@ -125,15 +123,14 @@ tests/data/datalake_with_config_schema
 +----------+-----------+
 |  col_name|  data_type|
 +----------+-----------+
-|        id|        int|
+|        id|     string|
 |first_name|     string|
 | last_name|     string|
 |     email|     string|
 |    gender|     string|
-|birth_date|       date|
 |  Database|        bar|
 |     Table|   students|
-|Created By|Spark 3.3.3|
+|Created By|Spark 3.4.1|
 |      Type|    MANAGED|
 +----------+-----------+
 ```
@@ -151,7 +148,7 @@ tests/data/datalake_with_config_schema
 |      note|     string|
 |  Database|        foo|
 |     Table|      exams|
-|Created By|Spark 3.3.3|
+|Created By|Spark 3.4.1|
 |      Type|    MANAGED|
 +----------+-----------+
 ```
