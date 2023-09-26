@@ -65,13 +65,18 @@ class DataLakeBuilder:
             if self.schema and table_full_name in self.schema:
                 reader = reader.schema(utils.dict_to_ddl_string(self.schema[table_full_name]))
             df = reader.format(table["format"]).options(**opts).load(table["path"])
-            df.write.mode("overwrite").saveAsTable(table_full_name)
+            writer = df.write
+            # TODO: make it easier
+            if self.spark_test.config.delta_configuration:
+                writer = writer.format("delta")
+            writer.mode("overwrite").saveAsTable(table_full_name)
 
         return self
 
     def cleanup(self):
         for table in self.tables:
-            self.spark.sql(f"TRUNCATE TABLE {table['db_name']}.{table['table_name']}")
+            if not self.spark_test.config.delta_configuration:
+                self.spark.sql(f"TRUNCATE TABLE {table['db_name']}.{table['table_name']}")
             self.spark.sql(f"DROP TABLE {table['db_name']}.{table['table_name']}")
         for db in self.dbs:
             self.spark.sql(f"DROP DATABASE IF EXISTS {db}")
