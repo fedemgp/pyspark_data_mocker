@@ -1,3 +1,8 @@
+<!--
+# To improve the naming of the datalake and avoid refactor the project, move the basic datalake temporally
+$ mv tests/data/basic_datalake/bar tests/data/basic_datalake/school
+$ mv tests/data/basic_datalake/foo tests/data/basic_datalake/grades
+-->
 # pyspark-data-mocker
 `pyspark-data-mocker` is a testing tool that facilitates the burden of setting up a desired datalake, so you can test
 easily the behavior of your data application. It configures also the spark session to optimize it for testing
@@ -16,11 +21,11 @@ inside the root directory. For example, let's take a look into the `basic_datala
 ```bash
 $ tree tests/data/basic_datalake -n --charset=ascii  # byexample: +rm=~
 tests/data/basic_datalake
-|-- bar
-|   |-- courses.csv
-|   `-- students.csv
-`-- foo
-    `-- exams.csv
+|-- grades
+|   `-- exams.csv
+`-- school
+    |-- courses.csv
+    `-- students.csv
 ~
 2 directories, 3 files
 ```
@@ -45,26 +50,26 @@ And that's it! you will now have in that execution context a datalake with the s
 +---------+
 |namespace|
 +---------+
-|      bar|
 |  default|
-|      foo|
+|   grades|
+|   school|
 +---------+
 ```
 
 We have the `default` database (which came for free when instantiating spark), and the two folders inside
-`tests/data/basic_datalake`: `bar` and `foo`.
+`tests/data/basic_datalake`: `school` and `grades`.
 
 
 ```python
->>> spark.sql("SHOW TABLES IN bar").show()
+>>> spark.sql("SHOW TABLES IN school").show()
 +---------+---------+-----------+
 |namespace|tableName|isTemporary|
 +---------+---------+-----------+
-|      bar|  courses|      false|
-|      bar| students|      false|
+|   school|  courses|      false|
+|   school| students|      false|
 +---------+---------+-----------+
 
->>> spark.sql("SELECT * FROM bar.courses").show()
+>>> spark.sql("SELECT * FROM school.courses").show()
 +---+------------+
 | id| course_name|
 +---+------------+
@@ -74,7 +79,7 @@ We have the `default` database (which came for free when instantiating spark), a
 +---+------------+
 
 
->>> spark.table("bar.students").show()
+>>> spark.table("school.students").show()
 +---+----------+---------+--------------------+------+
 | id|first_name|last_name|               email|gender|
 +---+----------+---------+--------------------+------+
@@ -91,14 +96,14 @@ Note how it is already filled with the data each CSV file has! The tool supports
 `csv`, `json`. The application will infer which format to use by looking the file extension.
 
 ```python
->>> spark.sql("SHOW TABLES IN foo").show()
+>>> spark.sql("SHOW TABLES IN grades").show()
 +---------+---------+-----------+
 |namespace|tableName|isTemporary|
 +---------+---------+-----------+
-|      foo|    exams|      false|
+|   grades|    exams|      false|
 +---------+---------+-----------+
 
->>> spark.table("foo.exams").show()
+>>> spark.table("grades.exams").show()
 +---+----------+---------+----------+----+
 | id|student_id|course_id|      date|note|
 +---+----------+---------+----------+----+
@@ -271,3 +276,8 @@ To use a custom configuration, you can pass a `string` or `pathlib.Path` optiona
 >>> spark_conf.get("spark.sql.catalogImplementation")
 'hive'
 ```
+<!--
+# Restore the previous state
+$ mv tests/data/basic_datalake/school tests/data/basic_datalake/bar
+$ mv tests/data/basic_datalake/grades tests/data/basic_datalake/foo
+-->
