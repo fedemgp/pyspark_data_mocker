@@ -26,7 +26,7 @@ but it can be overriden in the [application configuration file](https://fedemgp.
 
 ```bash
 $ cat ./pyspark_data_mocker/config/schema.py
-<...>schema.Optional("schema_config_file_name", default="schema_config.yaml"): str<...>
+<...>schema.Optional("config_file", default="schema_config.yaml")<...>
 ```
 
 That yaml needs to be a file where each key represents the table name (considering the database), and as value,

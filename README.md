@@ -80,15 +80,15 @@ We have the `default` database (which came for free when instantiating spark), a
 
 
 >>> spark.table("school.students").show()
-+---+----------+---------+--------------------+------+
-| id|first_name|last_name|               email|gender|
-+---+----------+---------+--------------------+------+
-|  1|  Shirleen|  Dunford|sdunford0@amazona...|Female|
-|  2|      Niko|  Puckrin|npuckrin1@shinyst...|  Male|
-|  3|    Sergei|   Barukh|sbarukh2@bizjourn...|  Male|
-|  4|       Sal|  Maidens|smaidens3@senate.gov|  Male|
-|  5|    Cooper|MacGuffie| cmacguffie4@ibm.com|  Male|
-+---+----------+---------+--------------------+------+
++---+----------+---------+--------------------+------+----------+
+| id|first_name|last_name|               email|gender|birth_date|
++---+----------+---------+--------------------+------+----------+
+|  1|  Shirleen|  Dunford|sdunford0@amazona...|Female|1978-08-01|
+|  2|      Niko|  Puckrin|npuckrin1@shinyst...|  Male|2000-11-28|
+|  3|    Sergei|   Barukh|sbarukh2@bizjourn...|  Male|1992-01-20|
+|  4|       Sal|  Maidens|smaidens3@senate.gov|  Male|2003-12-14|
+|  5|    Cooper|MacGuffie| cmacguffie4@ibm.com|  Male|2000-03-07|
++---+----------+---------+--------------------+------+----------+
 
 ```
 
