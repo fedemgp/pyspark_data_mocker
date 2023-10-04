@@ -1,0 +1,2 @@
+{"id": 1, "course_name": "Algorithms 1", "flags": {"acitve": true}, "correlative_courses": []}
+{"id": 2, "course_name": "Algorithms 2", "flags": {"acitve": true}, "correlative_courses": [1]}

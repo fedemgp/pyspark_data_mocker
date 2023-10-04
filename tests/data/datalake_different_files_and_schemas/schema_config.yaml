@@ -1,0 +1,9 @@
+school.courses:
+  id: int
+  course_name: string
+  flags: map<string, boolean>
+  correlative_courses: array<int>
+school.students:
+  id: long
+  name: string
+  birth_date: date
