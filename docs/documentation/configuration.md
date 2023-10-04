@@ -101,17 +101,56 @@ Note that now the spark session now use 4 CPU cores, the delta framework is enab
 implementation.
 
 ## Configuration file explanation
+<!--
+# Validate that the dataclass didn't change, and alert me if it did to update this part of the documentation
+$ cat ./pyspark_data_mocker/config/app_config.py  # byexample: +rm=~
+<...>
+@dataclasses.dataclass
+class AppConfig:
+    app_name: str
+    number_of_cores: int
+    enable_hive: bool
+    warehouse_dir: Dir
+    schema: "SchemaConfig"
+    delta_configuration: Optional["DeltaConfig"] = None
+<...>
+@dataclasses.dataclass
+class DeltaConfig:
+    scala_version: str
+    delta_version: str
+    snapshot_partitions: int
+    log_cache_size: int
+<...>
+@dataclasses.dataclass
+class SchemaConfig:
+    infer: bool
+    config_file: str
+<...>
+-->
 ¿But, what do those values represent? Let's take a closer look on the levers that we can control in this configuration
 file 
+### App configuration
 
-| config name           | type         | description                                                                                                                                                                                                                                                                  | default value                 |
-|-----------------------|--------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------|
-| `number_of_cores`     | INTEGER      | change the amount of CPU cores  The spark session will use                                                                                                                                                                                                                   | 1                             |
-| `enable_hive`         | BOOL         | Enables the usage of [Apache Hive's catalog](https://spark.apache.org/docs/3.1.1/api/python/reference/api/pyspark.sql.SparkSession.builder.enableHiveSupport.html)                                                                                                           | false                         |
-| `warehouse_dir`       | STRING       | If set, it will create a persistent directory where the wharehouse will live. By default `pyspark_data_mocker` uses a [TemporaryDirectory](https://docs.python.org/3/library/tempfile.html#tempfile.TemporaryDirectory) that will exists as long the builder instance exists | tempfile.TemporaryDirectory() |
-| `schema_config_file_name` | STRING | Yaml file to Configure the schema of each table the datalake will have. By default `pyspark_data_mocker` will search for a `schema_config.yaml` file. See [Schema infering section for further details](https://fedemgp.github.io/Documentation/schema_infering/)                                     | schema_config.yaml |
-| `delta_configuration` | DELTA_CONFIG | If set, it will enable [Delta Lake framework](https://delta.io/)                                                                                                                                                                                                             | None                          |
+| config name           | type          | default value                 | description                                                                                                                                                                                                                                                                  |
+|-----------------------|---------------|-------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `number_of_cores`     | INTEGER       | 1                             | change the amount of CPU cores  The spark session will use                                                                                                                                                                                                                   |
+| `enable_hive`         | BOOL          | false                         | Enables the usage of [Apache Hive's catalog](https://spark.apache.org/docs/3.1.1/api/python/reference/api/pyspark.sql.SparkSession.builder.enableHiveSupport.html)                                                                                                           |
+| `warehouse_dir`       | STRING        | tempfile.TemporaryDirectory() | If set, it will create a persistent directory where the wharehouse will live. By default `pyspark_data_mocker` uses a [TemporaryDirectory](https://docs.python.org/3/library/tempfile.html#tempfile.TemporaryDirectory) that will exists as long the builder instance exists |
+| `schema`              | SCHEMA_CONFIG | DEFAULT_CONFIG                | Schema configuration                                                                                                                                                                                                                                                         |
+| `delta_configuration` | DELTA_CONFIG  | None                          | If set, it will enable [Delta Lake framework](https://delta.io/)                                                                                                                                                                                                             |
 
+### Schema configuration
+Inside the app configuration, there is a special configuration for the schema. There you can set these options as you
+please
+
+| config name   | type   | default            | description                                           |
+|---------------|--------|--------------------|-------------------------------------------------------|
+| `infer`       | BOOL   | false              | Enable automatic column type infering                 |
+| `config_file` | STRING | schema_config.yaml | Config file name to read for manual schema definition |
+
+More about schema inferring can be seen [here](https://fedemgp.github.io/Documentation/schema_infering/)
+
+### Delta configuration
 Among the things you can change when enabling Delta capabilities are:
 
 | config name           | type     | description                                                                                                                                                                                                    |
