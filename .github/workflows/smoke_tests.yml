@@ -43,4 +43,4 @@ jobs:
         run: sudo apt-get install tree
       - name: byexample
         run: |
-          poetry run byexample -l shell,python README.md
+          poetry run byexample -l shell,python README.md docs/**/*.md
