@@ -20,10 +20,18 @@ tests/data/basic_datalake
 2 directories, 3 files
 ```
 
+## Setup
+```bash
+$ echo "app_name: test_complete
+> number_of_cores: 4
+> schema:
+>   infer: true
+> " > /tmp/3_3_3_inferring.yaml
+```
 ## Execution
 ```python
 >>> from pyspark_data_mocker import DataLakeBuilder
->>> builder = DataLakeBuilder.load_from_dir("./tests/data/basic_datalake")  # byexample: +timeout=20
+>>> builder = DataLakeBuilder.load_from_dir("./tests/data/basic_datalake", "/tmp/3_3_3_inferring.yaml")  # byexample: +timeout=20
 <...>
 ```
 
@@ -63,15 +71,15 @@ tests/data/basic_datalake
 
 >>> students = spark.table("bar.students")
 >>> students.show()
-+---+----------+---------+--------------------+------+----------+
-| id|first_name|last_name|               email|gender|birth_date|
-+---+----------+---------+--------------------+------+----------+
-|  1|  Shirleen|  Dunford|sdunford0@amazona...|Female|1978-08-01|
-|  2|      Niko|  Puckrin|npuckrin1@shinyst...|  Male|2000-11-28|
-|  3|    Sergei|   Barukh|sbarukh2@bizjourn...|  Male|1992-01-20|
-|  4|       Sal|  Maidens|smaidens3@senate.gov|  Male|2003-12-14|
-|  5|    Cooper|MacGuffie| cmacguffie4@ibm.com|  Male|2000-03-07|
-+---+----------+---------+--------------------+------+----------+
++---+----------+---------+--------------------+------+-------------------+
+| id|first_name|last_name|               email|gender|         birth_date|
++---+----------+---------+--------------------+------+-------------------+
+|  1|  Shirleen|  Dunford|sdunford0@amazona...|Female|1978-08-01 00:00:00|
+|  2|      Niko|  Puckrin|npuckrin1@shinyst...|  Male|2000-11-28 00:00:00|
+|  3|    Sergei|   Barukh|sbarukh2@bizjourn...|  Male|1992-01-20 00:00:00|
+|  4|       Sal|  Maidens|smaidens3@senate.gov|  Male|2003-12-14 00:00:00|
+|  5|    Cooper|MacGuffie| cmacguffie4@ibm.com|  Male|2000-03-07 00:00:00|
++---+----------+---------+--------------------+------+-------------------+
 ```
 
 ```python
@@ -84,20 +92,20 @@ tests/data/basic_datalake
 
 >>> exams = spark.table("foo.exams")
 >>> exams.show()
-+---+----------+---------+----------+----+
-| id|student_id|course_id|      date|note|
-+---+----------+---------+----------+----+
-|  1|         1|        1|2022-05-01|   9|
-|  2|         2|        1|2022-05-08|   7|
-|  3|         3|        1|2022-06-17|   4|
-|  4|         1|        3|2023-05-12|   9|
-|  5|         2|        3|2023-05-12|  10|
-|  6|         3|        3|2022-12-07|   7|
-|  7|         4|        3|2022-12-07|   4|
-|  8|         5|        3|2022-12-07|   2|
-|  9|         1|        2|2023-05-01|   5|
-| 10|         2|        2|2023-05-07|   8|
-+---+----------+---------+----------+----+
++---+----------+---------+-------------------+----+
+| id|student_id|course_id|               date|note|
++---+----------+---------+-------------------+----+
+|  1|         1|        1|2022-05-01 00:00:00|   9|
+|  2|         2|        1|2022-05-08 00:00:00|   7|
+|  3|         3|        1|2022-06-17 00:00:00|   4|
+|  4|         1|        3|2023-05-12 00:00:00|   9|
+|  5|         2|        3|2023-05-12 00:00:00|  10|
+|  6|         3|        3|2022-12-07 00:00:00|   7|
+|  7|         4|        3|2022-12-07 00:00:00|   4|
+|  8|         5|        3|2022-12-07 00:00:00|   2|
+|  9|         1|        2|2023-05-01 00:00:00|   5|
+| 10|         2|        2|2023-05-07 00:00:00|   8|
++---+----------+---------+-------------------+----+
 ```
 
 ## Show schema
@@ -109,7 +117,7 @@ tests/data/basic_datalake
 +-----------+-----------+
 |   col_name|  data_type|
 +-----------+-----------+
-|         id|     string|
+|         id|        int|
 |course_name|     string|
 |   Database|        bar|
 |      Table|    courses|
@@ -124,12 +132,12 @@ tests/data/basic_datalake
 +----------+-----------+
 |  col_name|  data_type|
 +----------+-----------+
-|        id|     string|
+|        id|        int|
 |first_name|     string|
 | last_name|     string|
 |     email|     string|
 |    gender|     string|
-|birth_date|     string|
+|birth_date|  timestamp|
 |  Database|        bar|
 |     Table|   students|
 |Created By|Spark 3.3.3|
@@ -143,11 +151,11 @@ tests/data/basic_datalake
 +----------+-----------+
 |  col_name|  data_type|
 +----------+-----------+
-|        id|     string|
-|student_id|     string|
-| course_id|     string|
-|      date|     string|
-|      note|     string|
+|        id|        int|
+|student_id|        int|
+| course_id|        int|
+|      date|  timestamp|
+|      note|        int|
 |  Database|        foo|
 |     Table|      exams|
 |Created By|Spark 3.3.3|

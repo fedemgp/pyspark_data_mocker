@@ -29,13 +29,13 @@ def test_build_datalake_using_dsl(data_dir, data_mocker):
     df = spark.table("default.a_table_with_students")
     expected = spark.createDataFrame(
         data=[
-            ("1", "Shirleen", "Dunford", "sdunford0@amazonaws.com", "Female"),
-            ("2", "Niko", "Puckrin", "npuckrin1@shinystat.com", "Male"),
-            ("3", "Sergei", "Barukh", "sbarukh2@bizjournals.com", "Male"),
-            ("4", "Sal", "Maidens", "smaidens3@senate.gov", "Male"),
-            ("5", "Cooper", "MacGuffie", "cmacguffie4@ibm.com", "Male"),
+            ("1", "Shirleen", "Dunford", "sdunford0@amazonaws.com", "Female", "1978-08-01"),
+            ("2", "Niko", "Puckrin", "npuckrin1@shinystat.com", "Male", "2000-11-28"),
+            ("3", "Sergei", "Barukh", "sbarukh2@bizjournals.com", "Male", "1992-01-20"),
+            ("4", "Sal", "Maidens", "smaidens3@senate.gov", "Male", "2003-12-14"),
+            ("5", "Cooper", "MacGuffie", "cmacguffie4@ibm.com", "Male", "2000-03-07"),
         ],
-        schema=["id", "first_name", "last_name", "email", "gender"],
+        schema=["id", "first_name", "last_name", "email", "gender", "birth_date"],
     )
     assert_df_equality(df, expected)
     assert True

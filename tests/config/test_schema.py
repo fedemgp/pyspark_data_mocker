@@ -17,7 +17,7 @@ def test_config_schema_returns_successful_configuration():
         "number_of_cores": 1,
         "enable_hive": True,
         "warehouse_dir": "/tmp/foo/bar",
-        "schema_config_file_name": "schema_config.yaml",
+        "schema": {"infer": False, "config_file": "schema_config.yaml"},
         "delta_configuration": {
             "scala_version": "2.11",
             "delta_version": "2.0.2",
@@ -32,7 +32,7 @@ def test_config_schema_returns_successful_configuration():
             "number_of_cores": 1,
             "enable_hive": True,
             "warehouse_dir": "/tmp/foo/bar",
-            "schema_config_file_name": "schema_config.yaml",
+            "schema": {"config_file": "schema_config.yaml"},
             "delta_configuration": {
                 "scala_version": "2.11",
                 "delta_version": "2.0.2",
@@ -48,7 +48,7 @@ def test_config_schema_sets_some_default_values(mocked_temp_dir):
     expected_config = {
         "app_name": "foo",
         "number_of_cores": 1,
-        "schema_config_file_name": "schema_config.yaml",
+        "schema": {"infer": False, "config_file": "schema_config.yaml"},
         "enable_hive": False,  # default is False
         "warehouse_dir": "/tmp/temp_dir",  # default will be a TemporaryDirectory that needs to be transformed to string
         # Delta doesn't have a default configuration
@@ -117,3 +117,14 @@ def test_config_schema_raises_if_delta_version_is_not_valid():
         "raised Exception(\"Version '3.0.0' it not in the list of supported versions (['1.1.0', '1.2.0', '1.2.1', "
         "'2.0.0', '2.0.1', '2.0.2', '2.1.0', '2.1.1', '2.2.0', '2.3.0', '2.4.0'])\")"
     )
+
+
+def test_config_schema_raises_if_schema_config_file_is_not_a_yaml_file():
+    with pytest.raises(SchemaError) as e_info:
+        schema.config_schema.validate(
+            {
+                "app_name": "foo",
+                "schema": {"config_file": "schema_config.json"},
+            }
+        )
+    assert str(e_info.value) == "The config file must be a yaml file"
