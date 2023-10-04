@@ -55,13 +55,13 @@ def test_load_from_dir_creates_a_table_for_each_file_in_the_given_database(data_
     df = spark.table("bar.students")
     expected = spark.createDataFrame(
         data=[
-            ("1", "Shirleen", "Dunford", "sdunford0@amazonaws.com", "Female"),
-            ("2", "Niko", "Puckrin", "npuckrin1@shinystat.com", "Male"),
-            ("3", "Sergei", "Barukh", "sbarukh2@bizjournals.com", "Male"),
-            ("4", "Sal", "Maidens", "smaidens3@senate.gov", "Male"),
-            ("5", "Cooper", "MacGuffie", "cmacguffie4@ibm.com", "Male"),
+            ("1", "Shirleen", "Dunford", "sdunford0@amazonaws.com", "Female", "1978-08-01"),
+            ("2", "Niko", "Puckrin", "npuckrin1@shinystat.com", "Male", "2000-11-28"),
+            ("3", "Sergei", "Barukh", "sbarukh2@bizjournals.com", "Male", "1992-01-20"),
+            ("4", "Sal", "Maidens", "smaidens3@senate.gov", "Male", "2003-12-14"),
+            ("5", "Cooper", "MacGuffie", "cmacguffie4@ibm.com", "Male", "2000-03-07"),
         ],
-        schema=["id", "first_name", "last_name", "email", "gender"],
+        schema=["id", "first_name", "last_name", "email", "gender", "birth_date"],
     )
     assert_df_equality(df, expected)
 
@@ -185,6 +185,49 @@ def test_load_from_dir_respect_the_schema_configured_in_yaml_file(data_mocker_lo
             (3, "Sergei", "Barukh", "sbarukh2@bizjournals.com", "Male", datetime.date(1992, 1, 20)),
             (4, "Sal", "Maidens", "smaidens3@senate.gov", "Male", datetime.date(2003, 12, 14)),
             (5, "Cooper", "MacGuffie", "cmacguffie4@ibm.com", "Male", datetime.date(2000, 3, 7)),
+        ],
+        schema=schema,
+    )
+    assert_df_equality(df, expected)
+
+
+def test_load_from_dir_infers_schema_if_configured(data_dir):
+    builder = DataLakeBuilder.load_from_dir(  # noqa: F841
+        pathlib.Path(data_dir, "basic_datalake"), pathlib.Path(data_dir, "config", "infer_schema.yaml")
+    )
+    spark = SparkSession.builder.getOrCreate()
+
+    df = spark.table("bar.courses")
+    schema = T.StructType(
+        [
+            T.StructField("id", T.IntegerType(), True),
+            T.StructField("course_name", T.StringType(), True),
+        ]
+    )
+    expected = spark.createDataFrame(
+        data=[(1, "Algorithms 1"), (2, "Algorithms 2"), (3, "Calculus 1")],
+        schema=schema,
+    )
+    assert_df_equality(df, expected)
+
+    df = spark.table("bar.students")
+    schema = T.StructType(
+        [
+            T.StructField("id", T.IntegerType(), True),
+            T.StructField("first_name", T.StringType(), True),
+            T.StructField("last_name", T.StringType(), True),
+            T.StructField("email", T.StringType(), True),
+            T.StructField("gender", T.StringType(), True),
+            T.StructField("birth_date", T.StringType(), True),
+        ]
+    )
+    expected = spark.createDataFrame(
+        data=[
+            (1, "Shirleen", "Dunford", "sdunford0@amazonaws.com", "Female", "1978-08-01"),
+            (2, "Niko", "Puckrin", "npuckrin1@shinystat.com", "Male", "2000-11-28"),
+            (3, "Sergei", "Barukh", "sbarukh2@bizjournals.com", "Male", "1992-01-20"),
+            (4, "Sal", "Maidens", "smaidens3@senate.gov", "Male", "2003-12-14"),
+            (5, "Cooper", "MacGuffie", "cmacguffie4@ibm.com", "Male", "2000-03-07"),
         ],
         schema=schema,
     )

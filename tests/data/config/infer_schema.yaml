@@ -1,0 +1,4 @@
+app_name: "test"
+number_of_cores: 1
+schema:
+  infer: True
