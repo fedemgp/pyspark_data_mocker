@@ -1,9 +1,9 @@
+# Home
 <!--
 # To improve the naming of the datalake and avoid refactor the project, move the basic datalake temporally
 $ mv tests/data/basic_datalake/bar tests/data/basic_datalake/school
 $ mv tests/data/basic_datalake/foo tests/data/basic_datalake/grades
 -->
-# pyspark-data-mocker
 `pyspark-data-mocker` is a testing tool that facilitates the burden of setting up a desired datalake, so you can test
 easily the behavior of your data application. It configures also the spark session to optimize it for testing
 purpose.
@@ -13,7 +13,7 @@ purpose.
 pip install pyspark-data-mocker
 ```
 
-## Usage
+## Basic usage
 `pyspark-data-mocker` searches the directory you provide in order to seek and load files that can be interpreted as
 tables, storing them inside the datalake. That datalake will contain certain databases depending on the folders
 inside the root directory. For example, let's take a look into the `basic_datalake`
@@ -122,7 +122,8 @@ Note how it is already filled with the data each CSV file has! The tool supports
 ```
 
 ### Cleanup
-You can easily clean the datalake by using the `cleanup` function
+Once you finish with your test, you can easily clean the datalake by using the `cleanup` function and assure that
+the next test will use a clean environment.
 
 ```python
 >>> builder.cleanup()
@@ -134,8 +135,6 @@ You can easily clean the datalake by using the `cleanup` function
 +---------+
 ```
 
-## Documentation
-You can check the full documentation to use all features available in `pyspark-data-mocker` [here](https://fedemgp.github.io/)
 
 <!--
 # Restore the previous state

@@ -1,0 +1,9 @@
+site_name: PySpark data mocker
+theme:
+  name: readthedocs
+  highlightjs: true
+  hljs_languages:
+    - python
+    - bash
+extra_css:
+  - css/extra.css
