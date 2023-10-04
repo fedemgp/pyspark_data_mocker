@@ -245,6 +245,9 @@ Now the `grades.exams` table schema also changed! but take into consideration th
 **it's not magic**. Note that the date column of `grades.exams` was not inferred to a `date` column type.
 Sometimes it is needed to use the manual schema definition to have the value we need.
 
+
+> **NOTE**: This behavior is fixed starting from pyspark 3.3. From that version and beyond, it infers date columns, but
+> spark considers all date-kind values as datetime
 ## Column types
 You can define the type of column of each type that [Spark supports](https://spark.apache.org/docs/latest/sql-ref-datatypes.html)!
 you don't have any restriction whatsoever (kind of, but more of that later). 
