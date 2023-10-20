@@ -1,18 +1,16 @@
 from pyspark.sql import SparkSession
 
-from pyspark_data_mocker.config import AppConfig
-from pyspark_data_mocker.config.app_config import DeltaConfig, SchemaConfig
+from pyspark_data_mocker.config.app_config import DeltaConfig, SparkConfig
 from pyspark_data_mocker.spark_session import SparkTestSession
 
 
 def test_spark_session_without_delta():
-    app_config = AppConfig(
+    app_config = SparkConfig(
         app_name="test",
         number_of_cores=4,
         enable_hive=False,
         warehouse_dir="/tmp/foo/bar",
         delta_configuration=None,
-        schema=SchemaConfig(infer=False, config_file="foo.yaml"),
     )
     spark = SparkTestSession(app_config)
     assert spark.session is not None
@@ -44,7 +42,7 @@ def test_spark_session_without_delta():
 
 
 def test_spark_session_with_delta():
-    app_config = AppConfig(
+    app_config = SparkConfig(
         app_name="foo",
         number_of_cores=1,
         enable_hive=True,
@@ -52,7 +50,6 @@ def test_spark_session_with_delta():
         delta_configuration=DeltaConfig(
             scala_version="2.12", delta_version="2.0.2", snapshot_partitions=1, log_cache_size=2
         ),
-        schema=SchemaConfig(infer=False, config_file="foo.yaml"),
     )
     spark = SparkTestSession(app_config)
     assert spark.session is not None

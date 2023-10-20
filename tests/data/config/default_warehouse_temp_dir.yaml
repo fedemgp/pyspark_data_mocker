@@ -1,3 +1,4 @@
-app_name: "test"
-number_of_cores: 1
-enable_hive: true
+spark_configuration:
+  app_name: "test"
+  number_of_cores: 1
+  enable_hive: true

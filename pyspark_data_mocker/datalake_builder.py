@@ -2,17 +2,20 @@ import pathlib
 from typing import List, Optional, Set
 
 from pyspark_data_mocker import config, utils
+from pyspark_data_mocker.config import AppConfig
 from pyspark_data_mocker.spark_session import SparkTestSession
 from pyspark_data_mocker.utils import PathLike
 
 
 class DataLakeBuilder:
-    def __init__(self, spark_test: SparkTestSession, schema_configuration: Optional[PathLike] = None):
+    def __init__(
+        self, spark_test: SparkTestSession, app_config: AppConfig, schema_configuration: Optional[PathLike] = None
+    ):
         self.dbs: Set[str] = set()
         self.tables: List[dict] = list()
         self.spark_test = spark_test
         self.spark = spark_test.session
-        self.app_config = spark_test.config
+        self.app_config = app_config
 
         self.schema: Optional[dict] = None
         if schema_configuration:
@@ -109,10 +112,10 @@ class DataLakeBuilder:
         if not datalake_dir.is_dir():
             raise ValueError(f"The path '{datalake_dir}' is not a directory with a delta lake data")
 
-        spark_test = SparkTestSession(app_config)
+        spark_test = SparkTestSession(app_config.spark_configuration)
         schema_config_path = pathlib.Path(datalake_dir, app_config.schema.config_file)
         schema_config = schema_config_path if schema_config_path.exists() else None
-        builder = DataLakeBuilder(spark_test, schema_configuration=schema_config)
+        builder = DataLakeBuilder(spark_test, schema_configuration=schema_config, app_config=app_config)
 
         for d in datalake_dir.iterdir():
             if d.name == app_config.schema.config_file:

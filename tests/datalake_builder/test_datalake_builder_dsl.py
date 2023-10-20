@@ -42,7 +42,8 @@ def test_build_datalake_using_dsl(data_dir, data_mocker):
 
 
 def test_creating_table_with_non_existing_db_raises(data_dir):
-    builder = DataLakeBuilder(SparkTestSession(config.default_config()))
+    app_config = config.default_config()
+    builder = DataLakeBuilder(SparkTestSession(app_config.spark_configuration), app_config)
     base_path = Path(data_dir, "basic_datalake", "bar")
     builder = builder.with_table("a_table_name", fmt="csv", path=Path(base_path, "courses.csv"), db_name="db1")
 

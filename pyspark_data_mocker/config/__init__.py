@@ -5,7 +5,7 @@ import yaml
 from dacite import from_dict
 
 from pyspark_data_mocker.config.app_config import AppConfig
-from pyspark_data_mocker.config.schema import config_schema
+from pyspark_data_mocker.config.schema import validate_schema
 from pyspark_data_mocker.utils import PathLike
 
 
@@ -20,8 +20,8 @@ def get_config_from_dir(filepath: PathLike) -> AppConfig:
     with open(filepath, "r") as file:
         config = yaml.safe_load(file)
 
-    config = config_schema.validate(config)
-    return from_dict(data_class=AppConfig, data=config)
+    app_config = validate_schema(config)
+    return from_dict(data_class=AppConfig, data=app_config)
 
 
 def get_schema_configuration_from_dir(filepath: PathLike) -> dict:

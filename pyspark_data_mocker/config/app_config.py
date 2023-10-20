@@ -8,11 +8,17 @@ Dir = Union[str, TemporaryDirectory]
 
 @dataclasses.dataclass
 class AppConfig:
+    disable_spark_configuration: bool
+    schema: "SchemaConfig"
+    spark_configuration: Optional["SparkConfig"] = None
+
+
+@dataclasses.dataclass
+class SparkConfig:
     app_name: str
     number_of_cores: int
     enable_hive: bool
     warehouse_dir: Dir
-    schema: "SchemaConfig"
     delta_configuration: Optional["DeltaConfig"] = None
 
     @property

@@ -1,9 +1,10 @@
-app_name: "test"
-number_of_cores: 1
-enable_hive: true
-warehouse_dir: "./tmp/foo/bar"
-delta_configuration:
-  scala_version: "2.12"
-  delta_version: "2.0.2"
-  snapshot_partitions: 2
-  log_cache_size: 3
+spark_configuration:
+  app_name: "test"
+  number_of_cores: 1
+  enable_hive: true
+  warehouse_dir: "./tmp/foo/bar"
+  delta_configuration:
+    scala_version: "2.12"
+    delta_version: "2.0.2"
+    snapshot_partitions: 2
+    log_cache_size: 3
