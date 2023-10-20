@@ -22,9 +22,10 @@ tests/data/basic_datalake
 
 ## Setup
 ```bash
-$ echo "app_name: test_complete
-> number_of_cores: 4
-> delta_configuration:
+$ echo "spark_configuration:
+>   app_name: test_complete
+>   number_of_cores: 4
+>   delta_configuration:
 >     scala_version: '2.12'
 >     delta_version: '2.0.2'
 >     snapshot_partitions: 2

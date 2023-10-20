@@ -4,18 +4,34 @@ from typing import Union
 
 from pyspark.sql import SparkSession
 
-from pyspark_data_mocker.config import AppConfig
+from pyspark_data_mocker.config.app_config import SparkConfig
 
 Dir = Union[str, TemporaryDirectory]
 
 
 class SparkTestSession:
-    def __init__(self, config: AppConfig):
+    def __init__(self, config: SparkConfig):
         self.log = logging.getLogger()
         self.config = config
         self._session = self.__create_session(config)
 
-    def __create_session(self, config: AppConfig) -> SparkSession:
+    def __create_session(self, config: SparkConfig) -> SparkSession:
+        """
+        Get a spark_session. If the config argument is defined, then the session will
+        be optimized for testing porpuses. In the case the optimization is disabled (by sending
+        a None config) then is responsability of the developer to configure Spark as you wish.
+
+        :param config:
+        :return:
+        """
+        builder = SparkSession.builder
+
+        if config:
+            builder = self.__configure_spark(config)
+
+        return builder.getOrCreate()
+
+    def __configure_spark(self, config: SparkConfig) -> SparkSession.Builder:
         """
         Creates a spark session with configuration that improves the local setup and
         execution. This is intended because the datalake that will be mocked for tests will have usually low
@@ -82,8 +98,7 @@ class SparkTestSession:
         if config.enable_hive:
             self.log.info("Enabling Hive support")
             builder = builder.enableHiveSupport()
-
-        return builder.getOrCreate()
+        return builder
 
     @property
     def session(self) -> SparkSession:

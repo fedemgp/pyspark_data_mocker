@@ -23,9 +23,10 @@ tests/data/datalake_with_config_schema
 
 ## Setup
 ```bash
-$ echo "app_name: test_complete
-> number_of_cores: 4
-> delta_configuration:
+$ echo "spark_configuration:
+>   app_name: test_complete
+>   number_of_cores: 4
+>   delta_configuration:
 >     scala_version: '2.12'
 >     delta_version: '2.2.0'
 >     snapshot_partitions: 2
