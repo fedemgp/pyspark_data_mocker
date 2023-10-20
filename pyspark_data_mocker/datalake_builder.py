@@ -71,7 +71,7 @@ class DataLakeBuilder:
             df = reader.format(table["format"]).options(**opts).load(table["path"])
             writer = df.write
             # TODO: make it easier
-            if self.spark_test.config.delta_configuration:
+            if self.spark_test.config and self.spark_test.config.delta_configuration:
                 writer = writer.format("delta")
             writer.mode("overwrite").saveAsTable(table_full_name)
 
@@ -79,7 +79,7 @@ class DataLakeBuilder:
 
     def cleanup(self):
         for table in self.tables:
-            if not self.spark_test.config.delta_configuration:
+            if not self.spark_test.config or not self.spark_test.config.delta_configuration:
                 self.spark.sql(f"TRUNCATE TABLE {table['db_name']}.{table['table_name']}")
             self.spark.sql(f"DROP TABLE {table['db_name']}.{table['table_name']}")
         for db in self.dbs:
