@@ -28,8 +28,9 @@ with automatic infer schema enabled
 
 ```bash
 $ cat ./tests/data/config/infer_schema.yaml
-app_name: "test"
-number_of_cores: 1
+spark_configuration:
+  app_name: "test"
+  number_of_cores: 1
 schema:
   infer: True
 ```
@@ -94,7 +95,7 @@ a dictionary with the columns as keys, and a [Spark's DDL type of the column](ht
 Let's consider this datalake definition.
 
 ```bash
-$ tree tests/data/datalake_with_config_schema -n --charset=ascii  # byexample: +rm=~
+$ tree tests/data/datalake_with_config_schema -n --charset=ascii  # byexample: +rm=~ +skip
 tests/data/datalake_with_config_schema
 |-- grades
 |   `-- exams.csv
@@ -255,7 +256,7 @@ you don't have any restriction whatsoever (kind of, but more of that later).
 ### Example
 Consider these files and schema definitions
 ```bash
-$ tree tests/data/datalake_different_files_and_schemas -n --charset=ascii  # byexample: +rm=~
+$ tree tests/data/datalake_different_files_and_schemas -n --charset=ascii  # byexample: +rm=~ +skip
 tests/data/datalake_different_files_and_schemas
 |-- schema_config.yaml
 `-- school
@@ -342,7 +343,7 @@ foo.bar:
   id: int
   invalid_col: map<string, string>
 
-$ tree tests/data/column_type_not_supported -n --charset=ascii  # byexample: +rm=~
+$ tree tests/data/column_type_not_supported -n --charset=ascii  # byexample: +rm=~ +skip
 tests/data/column_type_not_supported
 |-- foo
 |   `-- bar.csv

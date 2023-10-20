@@ -19,7 +19,7 @@ tables, storing them inside the datalake. That datalake will contain certain dat
 inside the root directory. For example, let's take a look into the `basic_datalake`
 
 ```bash
-$ tree tests/data/basic_datalake -n --charset=ascii  # byexample: +rm=~
+$ tree tests/data/basic_datalake -n --charset=ascii  # byexample: +rm=~ +skip
 tests/data/basic_datalake
 |-- grades
 |   `-- exams.csv
