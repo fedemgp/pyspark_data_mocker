@@ -21,8 +21,9 @@ tests/data/basic_datalake
 ```
 ## Setup
 ```bash
-$ echo "app_name: test_complete
-> number_of_cores: 4
+$ echo "spark_configuration:
+>   app_name: test_complete
+>   number_of_cores: 4
 > schema:
 >   infer: true
 > " > /tmp/3_4_0_inferring.yaml
