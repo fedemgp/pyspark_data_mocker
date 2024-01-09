@@ -44,7 +44,7 @@
 ```
 
 To better understand what these configuration means and why it is configured like this, you can take a look
-on Sergey Ivanychev's excellent research on ["Faster PySpark Unit Test"](https://medium.com/constructor-engineering/faster-pyspark-unit-tests-1cb7dfa6bdf6)
+on Sergey Ivanychev's excellent research on ["Faster PySpark Unit Test"](https://medium.com/constructor-engineering/faster-pyspark-unit-tests-1cb7dfa6bdf6).
 
 ## Custom configuration
 
@@ -138,11 +138,11 @@ class SchemaConfig:
 file 
 ### App configuration
 
-| config name                   | type          | default value   | description                                                                                                                                         |
-|-------------------------------|---------------|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| `schema`                      | SCHEMA_CONFIG | DEFAULT_CONFIG  | Schema configuration                                                                                                                                |
-| `disable_spark_configuration` | BOOL          | False           | If set to true, then all spark optimization mentioned before will be disabled. It is responsability of the developer to configure spark as he wish  |
-| `spark_configuration`         | SPARK_CONFIG  |                 | A reduced a mount of levers to modify the spark configuration recommended for tests.                                                                |
+| config name                   | type          | default value   | description                                                                                                                                       |
+|-------------------------------|---------------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| `schema`                      | SCHEMA_CONFIG | DEFAULT_CONFIG  | Schema configuration. You can set a custom yaml where you will define the schema of each table, or let spark to infer it. More info below         |
+| `disable_spark_configuration` | BOOL          | False           | If set to true, then all spark optimization mentioned before will be disabled. It is responsability of the developer to configure spark as he wish |
+| `spark_configuration`         | SPARK_CONFIG  |                 | A reduced amount of levers to modify the spark configuration recommended for tests.                                                               |
 
 ### Schema configuration
 Inside the app configuration, there is a special configuration for the schema. There you can set these options as you
@@ -157,17 +157,10 @@ More about schema inferring can be seen [here](https://fedemgp.github.io/Documen
 
 
 ### Spark configuration
-This is mandatory if you want to let `pyspark-data-mocker` to handle the spark configuration for you.
-It tries to abstract the user how the session should be and let him concentrate on define good test.
-One advance developer may ask by himself: "why are you obfuscating me how the spark session is configured? I demand to
-be free to configure Spark as I desire". To that advance user , **you can disable the automatic spark configuration** by setting as `True` the value `disable_spark_configuration`.
+This parameter is desired if you want to let `pyspark-data-mocker` to handle the spark configuration for you.
+It tries to abstract the user how the session should be and let him concentrate on define good tests without worrying
+much about performance and fine-tuning.
 
-That Engineer is responsible to configure spark before using this package, using the jars he wants. Here we
-recommend to still stick to the recommendations commented [here](https://medium.com/constructor-engineering/faster-pyspark-unit-tests-1cb7dfa6bdf6) in order to make the tests as fast as possible. Take in mind that the default spark configuration behaves poorly when
-handling a low amount of data, and if you write a considerable amount of test, the pipeline
-that run all the unit test may take forever!.
-
-Among the things you can modify in the Spark session if you let this package control it are:
 
 | config name            | type          | default value                 | description                                                                                                                                                                                                                                                                 |
 |------------------------|---------------|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -176,7 +169,7 @@ Among the things you can modify in the Spark session if you let this package con
 | `warehouse_dir`        | STRING        | tempfile.TemporaryDirectory() | If set, it will create a persistent directory where the wharehouse will live. By default `pyspark_data_mocker` uses a [TemporaryDirectory](https://docs.python.org/3/library/tempfile.html#tempfile.TemporaryDirectory) that will exists as long the builder instance exists |
 | `delta_configuration`  | DELTA_CONFIG  | None                          | If set, it will enable [Delta Lake framework](https://delta.io/)                                                                                                                                                                                                            |
 
-### Delta configuration
+#### Delta configuration
 Among the things you can change when enabling Delta capabilities are:
 
 | config name           | type     | description                                                                                                                                                                                                    |
@@ -191,3 +184,15 @@ scala and delta version.
 
 > **Important note 2:** For the delta configuration, take into consideration that ALL VALUES should be explicitly set-up, there is no default
 value for each one of them.
+
+
+### Disable spark optimizations
+One advance developer may ask by himself: "why are you obfuscating me how the spark session is configured? Let me
+handle it". To that advance user , **you can disable the automatic spark configuration** by setting as `True` the
+value `disable_spark_configuration`.
+
+That Engineer is responsible to configure spark before using this package, using the jars he wants. Here we
+recommend to still stick to the recommendations commented [here](https://medium.com/constructor-engineering/faster-pyspark-unit-tests-1cb7dfa6bdf6)
+in order to make the tests as fast as possible. Take in mind that the default spark configuration behaves poorly when
+handling a low amount of data, and if you write a considerable amount of test, the pipeline
+that run all the test suit may take forever!.
