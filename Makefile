@@ -11,3 +11,13 @@ lint: ### Runs black, isort, flake8 and mypy for code style checks and a static 
 
 	@echo "Running mypy"
 	@python -m mypy --config-file ./pyproject.toml .
+
+.PHONY: smoke-test
+smoke-test:
+	@echo "Running smoke tests"
+	@poetry run byexample -l shell,python README.md docs/**/*.md
+
+.PHONY: unit-test
+unit-test:
+	@echo "Running unit tests"
+	@poetry run pytest
