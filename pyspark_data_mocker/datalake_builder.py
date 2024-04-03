@@ -1,4 +1,3 @@
-import pathlib
 from typing import List, Optional, Set, Union
 
 from pyspark_data_mocker import config, utils
