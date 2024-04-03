@@ -36,7 +36,7 @@ $ echo "spark_configuration:
 ## Execution
 ```python
 >>> from pyspark_data_mocker import DataLakeBuilder
->>> builder = DataLakeBuilder.load_from_dir("./tests/data/basic_datalake", "/tmp/3_3_3_delta_2_3_0.yaml")  # byexample: +timeout=30
+>>> builder = DataLakeBuilder(app_config="/tmp/3_3_3_delta_2_3_0.yaml").load_from_dir("./tests/data/basic_datalake")  # byexample: +timeout=30
 <...>
 ```
 

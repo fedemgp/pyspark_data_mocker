@@ -37,7 +37,7 @@ How can we load them using `pyspark-data-mocker`? Really simple!
 
 ```python
 >>> from pyspark_data_mocker import DataLakeBuilder
->>> builder = DataLakeBuilder.load_from_dir("./tests/data/basic_datalake")  # byexample: +timeout=20 +pass
+>>> builder = DataLakeBuilder().load_from_dir("./tests/data/basic_datalake")  # byexample: +timeout=20 +pass
 ```
 
 And that's it! you will now have in that execution context a datalake with the structure defined in the folder
