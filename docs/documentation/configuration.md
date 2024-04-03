@@ -4,7 +4,7 @@
 
 ``` python
 >>> from pyspark_data_mocker import DataLakeBuilder
->>> builder = DataLakeBuilder.load_from_dir("./tests/data/basic_datalake")  # byexample: +timeout=20 +pass
+>>> builder = DataLakeBuilder().load_from_dir("./tests/data/basic_datalake")  # byexample: +timeout=20 +pass
 >>> spark = builder.spark
 >>> spark_conf = spark.conf
 ```
@@ -76,7 +76,7 @@ $ echo "
 To use a custom configuration, you can pass a `string` or `pathlib.Path` optional argument to `load_from_dir`.
 
 ```python
->>> builder = DataLakeBuilder.load_from_dir("./tests/data/basic_datalake", "/tmp/custom_config.yaml")  # byexample: +timeout=20
+>>> builder = DataLakeBuilder(app_config="/tmp/custom_config.yaml").load_from_dir("./tests/data/basic_datalake")  # byexample: +timeout=20
 <...>
 >>> spark_conf = SparkSession.builder.getOrCreate().conf
 >>> spark_conf.get("spark.app.name")

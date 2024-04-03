@@ -15,7 +15,7 @@ def data_dir() -> pathlib.Path:
 @pytest.fixture()
 def data_mocker_load_from_dir():
     app_config = default_config()
-    builder = DataLakeBuilder(SparkTestSession(app_config.spark_configuration), app_config=app_config)
+    builder = DataLakeBuilder(spark_test=SparkTestSession(app_config.spark_configuration), app_config=app_config)
     yield builder.load_from_dir
     builder.cleanup()
 
@@ -23,6 +23,6 @@ def data_mocker_load_from_dir():
 @pytest.fixture()
 def data_mocker():
     app_config = default_config()
-    builder = DataLakeBuilder(SparkTestSession(app_config.spark_configuration), app_config=app_config)
+    builder = DataLakeBuilder(spark_test=SparkTestSession(app_config.spark_configuration), app_config=app_config)
     yield builder
     builder.cleanup()

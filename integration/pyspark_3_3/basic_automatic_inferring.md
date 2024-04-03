@@ -32,7 +32,7 @@ $ echo "spark_configuration:
 ## Execution
 ```python
 >>> from pyspark_data_mocker import DataLakeBuilder
->>> builder = DataLakeBuilder.load_from_dir("./tests/data/basic_datalake", "/tmp/3_3_3_inferring.yaml")  # byexample: +timeout=20
+>>> builder = DataLakeBuilder(app_config="/tmp/3_3_3_inferring.yaml").load_from_dir("./tests/data/basic_datalake")  # byexample: +timeout=20
 <...>
 ```
 

@@ -40,7 +40,7 @@ will vary depending on their values
 
 ```python
 >>> from pyspark_data_mocker import DataLakeBuilder
->>> builder = DataLakeBuilder.load_from_dir("./tests/data/basic_datalake", "./tests/data/config/infer_schema.yaml")  # byexample: +timeout=20 +pass
+>>> builder = DataLakeBuilder(app_config="./tests/data/config/infer_schema.yaml").load_from_dir("./tests/data/basic_datalake")  # byexample: +timeout=20 +pass
 >>> spark = builder.spark
 >>> spark.sql("DESCRIBE TABLE school.students").select("col_name", "data_type").show()
 +----------+---------+
@@ -129,7 +129,7 @@ that will be created, and as value contains another dictionary with the columns 
 Let's build up the datalake
 
 ```python
->>> builder = DataLakeBuilder.load_from_dir("./tests/data/datalake_with_config_schema")  # byexample: +timeout=20 +pass
+>>> builder = DataLakeBuilder().load_from_dir("./tests/data/datalake_with_config_schema")  # byexample: +timeout=20 +pass
 >>> spark = builder.spark
 
 >>> spark.sql("SHOW TABLES IN school").show()
@@ -205,7 +205,7 @@ the table `grades.exams` (which we didn't define any custom schema) has for each
 We can combine this file with the automatic `infer` option to only configure manually the schemas that we need.
 
 ```python
->>> builder = DataLakeBuilder.load_from_dir("./tests/data/datalake_with_config_schema", "./tests/data/config/infer_schema.yaml")  # byexample: +timeout=20 +pass
+>>> builder = DataLakeBuilder(app_config="./tests/data/config/infer_schema.yaml").load_from_dir("./tests/data/datalake_with_config_schema")  # byexample: +timeout=20 +pass
 >>> spark = builder.spark
 >>> spark.sql("DESCRIBE TABLE school.students").select("col_name", "data_type").show()
 +----------+---------+
@@ -286,7 +286,7 @@ the file extension (the limitation is that the file format is a valid spark sour
 in each table.
 
 ```python
->>> builder = DataLakeBuilder.load_from_dir("./tests/data/datalake_different_files_and_schemas")  # byexample: +timeout=20 +pass
+>>> builder = DataLakeBuilder().load_from_dir("./tests/data/datalake_different_files_and_schemas")  # byexample: +timeout=20 +pass
 >>> spark = builder.spark
 >>> spark.sql("DESCRIBE TABLE school.students").select("col_name", "data_type").show()
 +----------+---------+
@@ -355,7 +355,7 @@ tests/data/column_type_not_supported
 If we want to set up this datalake, it will fail with this exception message.
 
 ```python
->>> builder = DataLakeBuilder.load_from_dir("./tests/data/column_type_not_supported")  # byexample: +timeout=20
+>>> builder = DataLakeBuilder().load_from_dir("./tests/data/column_type_not_supported")  # byexample: +timeout=20
 <...>AnalysisException: CSV data source does not support map<string,string> data type.
 ```
 

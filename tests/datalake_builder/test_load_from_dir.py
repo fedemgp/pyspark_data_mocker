@@ -86,14 +86,14 @@ def test_load_from_dir_creates_a_table_for_each_file_in_the_given_database(data_
 
 def test_load_from_dir_raises_if_path_is_not_valid():
     with pytest.raises(ValueError) as error:
-        DataLakeBuilder.load_from_dir("/tmp/foo/bar")
+        DataLakeBuilder().load_from_dir("/tmp/foo/bar")
 
     assert str(error.value) == "The path provided '/tmp/foo/bar' does not exists"
 
 
 def test_load_from_dir_raises_if_path_is_not_a_directory(data_dir):
     with pytest.raises(ValueError) as error:
-        DataLakeBuilder.load_from_dir(pathlib.Path(data_dir, "basic_datalake", "bar", "courses.csv"))
+        DataLakeBuilder().load_from_dir(pathlib.Path(data_dir, "basic_datalake", "bar", "courses.csv"))
 
     assert (
         str(error.value)
@@ -192,9 +192,8 @@ def test_load_from_dir_respect_the_schema_configured_in_yaml_file(data_mocker_lo
 
 
 def test_load_from_dir_infers_schema_if_configured(data_dir):
-    builder = DataLakeBuilder.load_from_dir(  # noqa: F841
-        pathlib.Path(data_dir, "basic_datalake"), pathlib.Path(data_dir, "config", "infer_schema.yaml")
-    )
+    builder = DataLakeBuilder(app_config=pathlib.Path(data_dir, "config", "infer_schema.yaml"))
+    builder = builder.load_from_dir(pathlib.Path(data_dir, "basic_datalake"))
     spark = SparkSession.builder.getOrCreate()
 
     df = spark.table("bar.courses")

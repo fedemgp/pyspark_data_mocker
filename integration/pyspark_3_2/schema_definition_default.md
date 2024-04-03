@@ -24,7 +24,7 @@ tests/data/datalake_with_config_schema
 ## Execution
 ```python
 >>> from pyspark_data_mocker import DataLakeBuilder
->>> builder = DataLakeBuilder.load_from_dir("./tests/data/datalake_with_config_schema")  # byexample: +timeout=20
+>>> builder = DataLakeBuilder().load_from_dir("./tests/data/datalake_with_config_schema")  # byexample: +timeout=20
 <...>
 ```
 

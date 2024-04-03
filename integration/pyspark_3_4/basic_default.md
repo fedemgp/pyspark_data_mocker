@@ -23,7 +23,7 @@ tests/data/basic_datalake
 ## Execution
 ```python
 >>> from pyspark_data_mocker import DataLakeBuilder
->>> builder = DataLakeBuilder.load_from_dir("./tests/data/basic_datalake")  # byexample: +timeout=20
+>>> builder = DataLakeBuilder().load_from_dir("./tests/data/basic_datalake")  # byexample: +timeout=20
 <...>
 ```
 
