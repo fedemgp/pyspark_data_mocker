@@ -19,19 +19,3 @@ def range_between(min_value: int, max_value: int) -> Callable:
         return True
 
     return validate
-
-
-def validate_version(valid_versions: set) -> Callable:
-    """
-    Given a set of valid versions, return a callback that will be used later for schema validation that raises
-    and error with a readable description for the user if the version configured is not valid.
-    :param valid_versions:
-    :return:
-    """
-
-    def validate(version: str):
-        if version not in valid_versions:
-            raise Exception(f"Version '{version}' it not in the list of supported versions ({sorted(valid_versions)})")
-        return True
-
-    return validate

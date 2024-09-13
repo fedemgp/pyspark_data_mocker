@@ -148,20 +148,15 @@ def test_validate_schema_raises_if_scala_version_is_not_valid():
                     "app_name": "foo",
                     "number_of_cores": 1,
                     "delta_configuration": {
-                        "scala_version": "2.10",
-                        "delta_version": "2.0.0",
+                        "scala_version": "2.a",
+                        "delta_version": "2.f.0",
                         "snapshot_partitions": 2,
                         "log_cache_size": 2,
                     },
                 }
             }
         )
-    assert str(e_info.value) == (
-        "Key 'delta_configuration' error:\n"
-        "Key 'scala_version' error:\n"
-        "validate('2.10') raised Exception(\"Version '2.10' it not in the list of supported versions "
-        "(['2.11', '2.12', '2.13'])\")"
-    )
+    assert str(e_info.value) == "Scala version must be a supported scala version"
 
 
 def test_validate_schema_raises_if_delta_version_is_not_valid():
@@ -173,19 +168,14 @@ def test_validate_schema_raises_if_delta_version_is_not_valid():
                     "number_of_cores": 1,
                     "delta_configuration": {
                         "scala_version": "2.11",
-                        "delta_version": "3.0.0",
+                        "delta_version": "3.0.f",
                         "snapshot_partitions": 2,
                         "log_cache_size": 2,
                     },
                 }
             }
         )
-    assert str(e_info.value) == (
-        "Key 'delta_configuration' error:\n"
-        "Key 'delta_version' error:\n"
-        "validate('3.0.0') raised Exception(\"Version '3.0.0' it not in the list of supported versions "
-        "(['1.1.0', '1.2.0', '1.2.1', '2.0.0', '2.0.1', '2.0.2', '2.1.0', '2.1.1', '2.2.0', '2.3.0', '2.4.0'])\")"
-    )
+    assert str(e_info.value) == "Delta version must be a supported version"
 
 
 def test_validate_schema_raises_if_schema_config_file_is_not_a_yaml_file():
