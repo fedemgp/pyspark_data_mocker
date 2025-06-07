@@ -1,9 +1,11 @@
 import datetime
 import pathlib
 
+import pyspark
 import pyspark.sql.types as T
 import pytest
 from chispa import assert_df_equality
+from packaging import version
 from pyspark.sql import SparkSession
 
 from pyspark_data_mocker.datalake_builder import DataLakeBuilder
@@ -210,6 +212,12 @@ def test_load_from_dir_infers_schema_if_configured(data_dir):
     assert_df_equality(df, expected)
 
     df = spark.table("bar.students")
+    spark_version = version.parse(pyspark.__version__)
+    if spark_version >= version.parse("3.5.0"):
+        # after version 3.5.0, pyspark can infer date-like columns.for the good of the test, force the cast
+        # of the result as string type
+        df = df.withColumn("birth_date", df.birth_date.cast("string"))
+
     schema = T.StructType(
         [
             T.StructField("id", T.IntegerType(), True),

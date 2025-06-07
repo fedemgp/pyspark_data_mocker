@@ -18,7 +18,7 @@ jobs:
           {version: "3.2.1", test_folder: "pyspark_3_2"},
           {version: "3.3.3", test_folder: "pyspark_3_3"},
           {version: "3.4.1", test_folder: "pyspark_3_4"},
-          {version: "3.5.1", test_folder: "pyspark_3_5"}
+          {version: "3.5.6", test_folder: "pyspark_3_5"}
         ]
 
     runs-on: ubuntu-latest

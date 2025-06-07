@@ -16,8 +16,7 @@ tests/data/basic_datalake
 |   `-- students.csv
 `-- foo
     `-- exams.csv
-~
-2 directories, 3 files
+<...>
 ```
 
 ## Execution

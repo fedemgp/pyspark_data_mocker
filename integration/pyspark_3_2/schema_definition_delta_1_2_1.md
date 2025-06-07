@@ -17,8 +17,7 @@ tests/data/datalake_with_config_schema
 |-- foo
 |   `-- exams.csv
 `-- schema_config.yaml
-~
-2 directories, 4 files
+<...>
 ```
 
 ## Setup

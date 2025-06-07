@@ -51,7 +51,7 @@ will vary depending on their values
 | last_name|   string|
 |     email|   string|
 |    gender|   string|
-|birth_date|   string|
+|birth_date|     date|
 +----------+---------+
 
 
@@ -71,7 +71,7 @@ will vary depending on their values
 |        id|      int|
 |student_id|      int|
 | course_id|      int|
-|      date|   string|
+|      date|     date|
 |      note|      int|
 +----------+---------+
 
@@ -236,7 +236,7 @@ We can combine this file with the automatic `infer` option to only configure man
 |        id|      int|
 |student_id|      int|
 | course_id|      int|
-|      date|   string|
+|      date|     date|
 |      note|      int|
 +----------+---------+
 
@@ -356,7 +356,7 @@ If we want to set up this datalake, it will fail with this exception message.
 
 ```python
 >>> builder = DataLakeBuilder().load_from_dir("./tests/data/column_type_not_supported")  # byexample: +timeout=20
-<...>AnalysisException: CSV data source does not support map<string,string> data type.
+<...>[UNSUPPORTED_DATA_TYPE_FOR_DATASOURCE] The CSV datasource doesn't support the column `invalid_col` of the type "MAP<STRING, STRING>".
 ```
 
 <!--

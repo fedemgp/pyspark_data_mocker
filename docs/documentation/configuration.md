@@ -15,7 +15,7 @@
 >>> spark_conf.get("spark.master")  # 1 thread for the execution
 'local[1]'
 >>> spark_conf.get("spark.sql.warehouse.dir")  # Temporal directory to store the data warehouse
-'/tmp/tmp<...>/spark_warehouse'
+'file:/tmp/tmp<...>/spark_warehouse'
 >>> spark_conf.get("spark.sql.shuffle.partitions")
 '1'
 
@@ -84,7 +84,7 @@ To use a custom configuration, you can pass a `string` or `pathlib.Path` optiona
 >>> spark_conf.get("spark.master")
 'local[4]'
 >>> spark_conf.get("spark.sql.warehouse.dir")
-'/tmp/full_delta_lake/spark_warehouse'
+'file:/tmp/full_delta_lake/spark_warehouse'
 
 >>> spark_conf.get("spark.jars.packages")
 'io.delta:delta-core_2.12:2.0.2'
