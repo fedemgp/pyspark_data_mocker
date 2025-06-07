@@ -12,7 +12,7 @@ keywords = ["pyspark", "tests", "data", "mocker"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-schema = "^0.7.5"
+schema = "0.7.5"
 dacite = "^1.8.1"
 pyyaml = "^6.0.1"
 pyspark = "^3.2.1"
