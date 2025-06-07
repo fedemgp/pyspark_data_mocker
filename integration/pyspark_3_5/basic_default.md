@@ -4,7 +4,7 @@
 
 ```bash
 $ pip freeze | grep pyspark
-pyspark==3.5.1
+pyspark==3.5.6
 <...>
 ```
 
@@ -16,8 +16,7 @@ tests/data/basic_datalake
 |   `-- students.csv
 `-- foo
     `-- exams.csv
-~
-2 directories, 3 files
+<...>
 ```
 
 ## Execution
@@ -112,7 +111,7 @@ tests/data/basic_datalake
 |course_name|     string|
 |   Database|        bar|
 |      Table|    courses|
-| Created By|Spark 3.5.1|
+| Created By|Spark 3.5.6|
 |       Type|    MANAGED|
 +-----------+-----------+
 ```
@@ -131,7 +130,7 @@ tests/data/basic_datalake
 |birth_date|     string|
 |  Database|        bar|
 |     Table|   students|
-|Created By|Spark 3.5.1|
+|Created By|Spark 3.5.6|
 |      Type|    MANAGED|
 +----------+-----------+
 ```
@@ -149,7 +148,7 @@ tests/data/basic_datalake
 |      note|     string|
 |  Database|        foo|
 |     Table|      exams|
-|Created By|Spark 3.5.1|
+|Created By|Spark 3.5.6|
 |      Type|    MANAGED|
 +----------+-----------+
 ```

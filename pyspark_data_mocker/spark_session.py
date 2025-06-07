@@ -3,9 +3,8 @@ from tempfile import TemporaryDirectory
 from typing import Union
 
 from packaging import version
-
-import pyspark
 from pyspark.sql import SparkSession
+
 from pyspark_data_mocker.config.app_config import SparkConfig
 
 Dir = Union[str, TemporaryDirectory]

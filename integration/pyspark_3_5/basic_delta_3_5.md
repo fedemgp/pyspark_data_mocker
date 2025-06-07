@@ -25,8 +25,8 @@ $ echo "spark_configuration:
 >   app_name: test_complete
 >   number_of_cores: 4
 >   delta_configuration:
->     scala_version: '2.13'
->     delta_version: '3.2.1'
+>     scala_version: '2.12'
+>     delta_version: '3.3.2'
 >     snapshot_partitions: 2
 >     log_cache_size: 3
 > " > /tmp/3_5_1_delta_3_2_1.yaml
@@ -41,8 +41,9 @@ $ echo "spark_configuration:
 
 ```python
 >>> from pyspark.sql import SparkSession
->>> spark = SparkSession.builder.getOrCreate()
->>> spark.sql("SHOW DATABASES").show()
+>>> spark = SparkSession.builder.getOrCreate()  # byexample: +timeout=10
+<...>
+>>> spark.sql("SHOW SCHEMAS").show()
 +---------+
 |namespace|
 +---------+

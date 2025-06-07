@@ -90,7 +90,10 @@ class DataLakeBuilder:
             # TODO: make it easier
             if self.spark_test.config and self.spark_test.config.delta_configuration:
                 writer = writer.format("delta")
-            writer.mode("overwrite").saveAsTable(table_full_name)
+            # pyspark in versions 3.5+ got a little bit messier when trying to overwrite a table in a batch mode.
+            # Executing a simple DROP IF EXISTS and then create the table
+            self.spark.sql(f"DROP TABLE IF EXISTS {table_full_name}")
+            writer.saveAsTable(table_full_name)
 
         return self
 

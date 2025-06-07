@@ -4,7 +4,7 @@
 
 ```bash
 $ pip freeze | grep pyspark
-pyspark==3.5.1
+pyspark==3.5.6
 <...>
 ```
 
@@ -17,8 +17,7 @@ tests/data/datalake_with_config_schema
 |-- foo
 |   `-- exams.csv
 `-- schema_config.yaml
-~
-2 directories, 4 files
+<...>
 ```
 
 ## Setup
@@ -27,8 +26,8 @@ $ echo "spark_configuration:
 >   app_name: test_complete
 >   number_of_cores: 4
 >   delta_configuration:
->     scala_version: '2.13'
->     delta_version: '3.2.1'
+>     scala_version: '2.12'
+>     delta_version: '3.3.2'
 >     snapshot_partitions: 2
 >     log_cache_size: 3
 > " > /tmp/3_5_1_delta_3_2_1.yaml
