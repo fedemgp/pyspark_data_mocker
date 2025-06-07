@@ -58,10 +58,9 @@ class SparkTestSession:
         builder = builder.config("spark.sql.shuffle.partitions", 1)
 
         # accumulate all JVM options and at the end set the JVM configuration
-        # -XX:+CMSClassUnloadingEnabled: allows JVM garbage collector to remove unused classes that spark generates
         # -XX:+UseCompressedOops: tells JVM to use 32-bit addresses instead of 64 (if you don't use more that 32GB of
         #                         ram there would not be any problem
-        jvm_options = ["-XX:+CMSClassUnloadingEnabled", "-XX:+UseCompressedOops"]
+        jvm_options = ["-XX:+UseCompressedOops"]
 
         # Enable delta optimizations if configured
         if config.delta_configuration:
