@@ -47,7 +47,9 @@ def test_creating_table_with_non_existing_db_raises(data_dir):
     base_path = Path(data_dir, "basic_datalake", "bar")
     builder = builder.with_table("a_table_name", fmt="csv", path=Path(base_path, "courses.csv"), db_name="db1")
 
-    with pytest.raises(pyspark.sql.utils.AnalysisException) as error:
+    with pytest.raises(pyspark.sql.utils.AnalysisException, match="db1") as error:
         builder.run()
 
-    assert str(error.value) == "Database 'db1' not found"
+    msg = str(error.value).lower()
+    assert "db1" in msg
+    assert any(fragment in msg for fragment in ["database 'db1' not found", "schema `db1` cannot be found"])

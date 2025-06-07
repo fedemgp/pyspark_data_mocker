@@ -1,43 +1,28 @@
-# Basic test (delta enabled for pyspark 3.2.1)
+# Basic test (default config)
 
 ## Dependency check
 
 ```bash
 $ pip freeze | grep pyspark
-pyspark==3.2.1
+pyspark==3.5.6
 <...>
 ```
 
 ```bash
-$ tree tests/data/datalake_with_config_schema -n --charset=ascii  # byexample: +rm=~
-tests/data/datalake_with_config_schema
+$ tree tests/data/basic_datalake -n --charset=ascii  # byexample: +rm=~
+tests/data/basic_datalake
 |-- bar
 |   |-- courses.csv
 |   `-- students.csv
-|-- foo
-|   `-- exams.csv
-`-- schema_config.yaml
-~
-2 directories, 4 files
-```
-
-## Setup
-```bash
-$ echo "spark_configuration:
->   app_name: test_complete
->   number_of_cores: 4
->   delta_configuration:
->     scala_version: '2.12'
->     delta_version: '2.0.2'
->     snapshot_partitions: 2
->     log_cache_size: 3
-> " > /tmp/3_2_1_delta.yaml
+`-- foo
+    `-- exams.csv
+<...>
 ```
 
 ## Execution
 ```python
 >>> from pyspark_data_mocker import DataLakeBuilder
->>> builder = DataLakeBuilder(app_config="/tmp/3_2_1_delta.yaml").load_from_dir("./tests/data/datalake_with_config_schema")  # byexample: +timeout=30
+>>> builder = DataLakeBuilder().load_from_dir("./tests/data/basic_datalake")  # byexample: +timeout=20
 <...>
 ```
 
@@ -118,50 +103,54 @@ $ echo "spark_configuration:
 ```python
 >>> import pyspark.sql.functions as F
 >>> schema = spark.sql("DESCRIBE TABLE EXTENDED bar.courses").select("col_name", "data_type")
->>> schema.filter(F.col("col_name").isin(*courses.columns, "Name", "Provider")).show()
+>>> schema.filter(F.col("col_name").isin(*courses.columns, "Created By", "Database", "Table", "Type")).show()
 +-----------+-----------+
 |   col_name|  data_type|
 +-----------+-----------+
-|         id|        int|
+|         id|     string|
 |course_name|     string|
-|       Name|bar.courses|
-|   Provider|      delta|
+|   Database|        bar|
+|      Table|    courses|
+| Created By|Spark 3.5.6|
+|       Type|    MANAGED|
 +-----------+-----------+
-
 ```
 
 ```python
 >>> schema = spark.sql("DESCRIBE TABLE EXTENDED bar.students").select("col_name", "data_type")
->>> schema.filter(F.col("col_name").isin(*students.columns, "Name", "Provider")).show()
-+----------+------------+
-|  col_name|   data_type|
-+----------+------------+
-|        id|         int|
-|first_name|      string|
-| last_name|      string|
-|     email|      string|
-|    gender|      string|
-|birth_date|        date|
-|      Name|bar.students|
-|  Provider|       delta|
-+----------+------------+
-
+>>> schema.filter(F.col("col_name").isin(*students.columns, "Created By", "Database", "Table", "Type")).show()
++----------+-----------+
+|  col_name|  data_type|
++----------+-----------+
+|        id|     string|
+|first_name|     string|
+| last_name|     string|
+|     email|     string|
+|    gender|     string|
+|birth_date|     string|
+|  Database|        bar|
+|     Table|   students|
+|Created By|Spark 3.5.6|
+|      Type|    MANAGED|
++----------+-----------+
 ```
 
 ```python
 >>> schema = spark.sql("DESCRIBE TABLE EXTENDED foo.exams").select("col_name", "data_type")
->>> schema.filter(F.col("col_name").isin(*exams.columns, "Name", "Provider")).show()
-+----------+---------+
-|  col_name|data_type|
-+----------+---------+
-|        id|   string|
-|student_id|   string|
-| course_id|   string|
-|      date|   string|
-|      note|   string|
-|      Name|foo.exams|
-|  Provider|    delta|
-+----------+---------+
+>>> schema.filter(F.col("col_name").isin(*exams.columns, "Created By", "Database", "Table", "Type")).show()
++----------+-----------+
+|  col_name|  data_type|
++----------+-----------+
+|        id|     string|
+|student_id|     string|
+| course_id|     string|
+|      date|     string|
+|      note|     string|
+|  Database|        foo|
+|     Table|      exams|
+|Created By|Spark 3.5.6|
+|      Type|    MANAGED|
++----------+-----------+
 ```
 
 ## Cleanup

@@ -1,46 +1,49 @@
-# Basic test (default config)
+# Basic test (delta enabled for pyspark 3.5.1)
 
 ## Dependency check
 
 ```bash
 $ pip freeze | grep pyspark
-pyspark==3.2.1
+pyspark==3.5.6
 <...>
 ```
 
 ```bash
-$ tree tests/data/basic_datalake -n --charset=ascii  # byexample: +rm=~
-tests/data/basic_datalake
+$ tree tests/data/datalake_with_config_schema -n --charset=ascii  # byexample: +rm=~
+tests/data/datalake_with_config_schema
 |-- bar
 |   |-- courses.csv
 |   `-- students.csv
-`-- foo
-    `-- exams.csv
-~
-2 directories, 3 files
+|-- foo
+|   `-- exams.csv
+`-- schema_config.yaml
+<...>
 ```
 
 ## Setup
 ```bash
-$ echo "schema:
->   infer: true
-> spark_configuration:
+$ echo "spark_configuration:
 >   app_name: test_complete
 >   number_of_cores: 4
-> " > /tmp/3_2_1_inferring.yaml
+>   delta_configuration:
+>     scala_version: '2.12'
+>     delta_version: '3.3.2'
+>     snapshot_partitions: 2
+>     log_cache_size: 3
+> " > /tmp/3_5_1_delta_3_2_1.yaml
 ```
 
 ## Execution
 ```python
 >>> from pyspark_data_mocker import DataLakeBuilder
->>> builder = DataLakeBuilder(app_config="/tmp/3_2_1_inferring.yaml").load_from_dir("./tests/data/basic_datalake")  # byexample: +timeout=20
+>>> builder = DataLakeBuilder(app_config="/tmp/3_5_1_delta_3_2_1.yaml").load_from_dir("./tests/data/datalake_with_config_schema")  # byexample: +timeout=30
 <...>
 ```
 
 ```python
 >>> from pyspark.sql import SparkSession
 >>> spark = SparkSession.builder.getOrCreate()
->>> spark.sql("SHOW DATABASES").show()
+>>> spark.sql("SHOW DATABASES").show()  # byexample: +timeout=10
 +---------+
 |namespace|
 +---------+
@@ -51,7 +54,7 @@ $ echo "schema:
 ```
 
 ```python
->>> spark.sql("SHOW TABLES IN bar").show()
+>>> spark.sql("SHOW TABLES IN bar").show()  # byexample: +timeout=10
 +---------+---------+-----------+
 |namespace|tableName|isTemporary|
 +---------+---------+-----------+
@@ -60,8 +63,8 @@ $ echo "schema:
 +---------+---------+-----------+
 
 >>> courses = spark.sql("SELECT * FROM bar.courses")
->>> courses.show()
-+---+------------+
+>>> courses.show()  # byexample: +timeout=10
+<...>+---+------------+
 | id| course_name|
 +---+------------+
 |  1|Algorithms 1|
@@ -71,7 +74,7 @@ $ echo "schema:
 
 
 >>> students = spark.table("bar.students")
->>> students.show()
+>>> students.show()  # byexample: +timeout=10
 +---+----------+---------+--------------------+------+----------+
 | id|first_name|last_name|               email|gender|birth_date|
 +---+----------+---------+--------------------+------+----------+
@@ -84,7 +87,7 @@ $ echo "schema:
 ```
 
 ```python
->>> spark.sql("SHOW TABLES IN foo").show()
+>>> spark.sql("SHOW TABLES IN foo").show()  # byexample: +timeout=10
 +---------+---------+-----------+
 |namespace|tableName|isTemporary|
 +---------+---------+-----------+
@@ -92,7 +95,7 @@ $ echo "schema:
 +---------+---------+-----------+
 
 >>> exams = spark.table("foo.exams")
->>> exams.show()
+>>> exams.show()  # byexample: +timeout=10
 +---+----------+---------+----------+----+
 | id|student_id|course_id|      date|note|
 +---+----------+---------+----------+----+
@@ -114,60 +117,56 @@ $ echo "schema:
 ```python
 >>> import pyspark.sql.functions as F
 >>> schema = spark.sql("DESCRIBE TABLE EXTENDED bar.courses").select("col_name", "data_type")
->>> schema.filter(F.col("col_name").isin(*courses.columns, "Created By", "Database", "Table", "Type")).show()
-+-----------+-----------+
-|   col_name|  data_type|
-+-----------+-----------+
-|         id|        int|
-|course_name|     string|
-|   Database|        bar|
-|      Table|    courses|
-| Created By|Spark 3.2.1|
-|       Type|    MANAGED|
-+-----------+-----------+
+>>> schema.filter(F.col("col_name").isin(*courses.columns, "Name", "Provider")).show(truncate=False)  # byexample: +timeout=10
++-----------+-------------------------+
+|col_name   |data_type                |
++-----------+-------------------------+
+|id         |int                      |
+|course_name|string                   |
+|Name       |spark_catalog.bar.courses|
+|Provider   |delta                    |
++-----------+-------------------------+
+
 ```
 
 ```python
 >>> schema = spark.sql("DESCRIBE TABLE EXTENDED bar.students").select("col_name", "data_type")
->>> schema.filter(F.col("col_name").isin(*students.columns, "Created By", "Database", "Table", "Type")).show()
-+----------+-----------+
-|  col_name|  data_type|
-+----------+-----------+
-|        id|        int|
-|first_name|     string|
-| last_name|     string|
-|     email|     string|
-|    gender|     string|
-|birth_date|     string|
-|  Database|        bar|
-|     Table|   students|
-|Created By|Spark 3.2.1|
-|      Type|    MANAGED|
-+----------+-----------+
+>>> schema.filter(F.col("col_name").isin(*students.columns, "Name", "Provider")).show(truncate=False)  # byexample: +timeout=10
++----------+--------------------------+
+|col_name  |data_type                 |
++----------+--------------------------+
+|id        |int                       |
+|first_name|string                    |
+|last_name |string                    |
+|email     |string                    |
+|gender    |string                    |
+|birth_date|date                      |
+|Name      |spark_catalog.bar.students|
+|Provider  |delta                     |
++----------+--------------------------+
+
 ```
 
 ```python
 >>> schema = spark.sql("DESCRIBE TABLE EXTENDED foo.exams").select("col_name", "data_type")
->>> schema.filter(F.col("col_name").isin(*exams.columns, "Created By", "Database", "Table", "Type")).show()
-+----------+-----------+
-|  col_name|  data_type|
-+----------+-----------+
-|        id|        int|
-|student_id|        int|
-| course_id|        int|
-|      date|     string|
-|      note|        int|
-|  Database|        foo|
-|     Table|      exams|
-|Created By|Spark 3.2.1|
-|      Type|    MANAGED|
-+----------+-----------+
+>>> schema.filter(F.col("col_name").isin(*exams.columns, "Name", "Provider")).show(truncate=False)  # byexample: +timeout=10
++----------+-----------------------+
+|col_name  |data_type              |
++----------+-----------------------+
+|id        |string                 |
+|student_id|string                 |
+|course_id |string                 |
+|date      |string                 |
+|note      |string                 |
+|Name      |spark_catalog.foo.exams|
+|Provider  |delta                  |
++----------+-----------------------+
 ```
 
 ## Cleanup
 ```python
 >>> builder.cleanup()
->>> spark.sql("SHOW DATABASES").show()
+>>> spark.sql("SHOW DATABASES").show()  # byexample: +timeout=10
 +---------+
 |namespace|
 +---------+

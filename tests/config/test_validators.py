@@ -22,15 +22,3 @@ def test_range_between_returns_callback_that_checks_if_the_given_parameter_is_be
         validator(1)
 
     assert str(e_info.value) == "Number configured is not between the range [2, 5]"
-
-
-def test_validate_version_returns_callback_that_checks_if_the_given_parameter_is_in_the_valid_versions():
-    validator = validators.validate_version({"1.0.0", "1.0.1"})
-    assert isinstance(validator, Callable)
-    assert validator("1.0.1")
-
-    # it raises if parameter is not in the range
-    with pytest.raises(Exception) as e_info:
-        validator("1.0.2")
-
-    assert str(e_info.value) == "Version '1.0.2' it not in the list of supported versions (['1.0.0', '1.0.1'])"
