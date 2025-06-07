@@ -63,8 +63,8 @@ $ echo "spark_configuration:
 +---------+---------+-----------+
 
 >>> courses = spark.sql("SELECT * FROM bar.courses")
->>> courses.show()
-+---+------------+
+>>> courses.show()  # byexample: +timeout=10
+<...>+---+------------+
 | id| course_name|
 +---+------------+
 |  1|Algorithms 1|
@@ -74,7 +74,7 @@ $ echo "spark_configuration:
 
 
 >>> students = spark.table("bar.students")
->>> students.show()
+>>> students.show()  # byexample: +timeout=10
 +---+----------+---------+--------------------+------+----------+
 | id|first_name|last_name|               email|gender|birth_date|
 +---+----------+---------+--------------------+------+----------+
@@ -87,7 +87,7 @@ $ echo "spark_configuration:
 ```
 
 ```python
->>> spark.sql("SHOW TABLES IN foo").show()
+>>> spark.sql("SHOW TABLES IN foo").show()  # byexample: +timeout=10
 +---------+---------+-----------+
 |namespace|tableName|isTemporary|
 +---------+---------+-----------+
@@ -95,7 +95,7 @@ $ echo "spark_configuration:
 +---------+---------+-----------+
 
 >>> exams = spark.table("foo.exams")
->>> exams.show()
+>>> exams.show()  # byexample: +timeout=10
 +---+----------+---------+----------+----+
 | id|student_id|course_id|      date|note|
 +---+----------+---------+----------+----+
@@ -117,7 +117,7 @@ $ echo "spark_configuration:
 ```python
 >>> import pyspark.sql.functions as F
 >>> schema = spark.sql("DESCRIBE TABLE EXTENDED bar.courses").select("col_name", "data_type")
->>> schema.filter(F.col("col_name").isin(*courses.columns, "Name", "Provider")).show(truncate=False)
+>>> schema.filter(F.col("col_name").isin(*courses.columns, "Name", "Provider")).show(truncate=False)  # byexample: +timeout=10
 +-----------+-------------------------+
 |col_name   |data_type                |
 +-----------+-------------------------+
@@ -131,7 +131,7 @@ $ echo "spark_configuration:
 
 ```python
 >>> schema = spark.sql("DESCRIBE TABLE EXTENDED bar.students").select("col_name", "data_type")
->>> schema.filter(F.col("col_name").isin(*students.columns, "Name", "Provider")).show(truncate=False)
+>>> schema.filter(F.col("col_name").isin(*students.columns, "Name", "Provider")).show(truncate=False)  # byexample: +timeout=10
 +----------+--------------------------+
 |col_name  |data_type                 |
 +----------+--------------------------+
@@ -150,7 +150,7 @@ $ echo "spark_configuration:
 
 ```python
 >>> schema = spark.sql("DESCRIBE TABLE EXTENDED foo.exams").select("col_name", "data_type")
->>> schema.filter(F.col("col_name").isin(*exams.columns, "Name", "Provider")).show(truncate=False)
+>>> schema.filter(F.col("col_name").isin(*exams.columns, "Name", "Provider")).show(truncate=False)  # byexample: +timeout=10
 +----------+-----------------------+
 |col_name  |data_type              |
 +----------+-----------------------+
@@ -167,7 +167,7 @@ $ echo "spark_configuration:
 ## Cleanup
 ```python
 >>> builder.cleanup()
->>> spark.sql("SHOW DATABASES").show()
+>>> spark.sql("SHOW DATABASES").show()  # byexample: +timeout=10
 +---------+
 |namespace|
 +---------+
