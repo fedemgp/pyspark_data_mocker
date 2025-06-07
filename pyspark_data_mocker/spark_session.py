@@ -2,8 +2,10 @@ import logging
 from tempfile import TemporaryDirectory
 from typing import Union
 
-from pyspark.sql import SparkSession
+from packaging import version
 
+import pyspark
+from pyspark.sql import SparkSession
 from pyspark_data_mocker.config.app_config import SparkConfig
 
 Dir = Union[str, TemporaryDirectory]
@@ -66,7 +68,7 @@ class SparkTestSession:
         if config.delta_configuration:
             dconfig = config.delta_configuration
             self.log.info(f"Enabling delta configuration using delta version '{dconfig.delta_version}'")
-            delta_package = f"io.delta:delta-core_{dconfig.scala_version}:{dconfig.delta_version}"
+            delta_package = self._get_delta_package(dconfig.scala_version, dconfig.delta_version)
             builder = (
                 builder.config("spark.jars.packages", delta_package)
                 .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
@@ -103,3 +105,17 @@ class SparkTestSession:
     @property
     def session(self) -> SparkSession:
         return self._session
+
+    @staticmethod
+    def _get_delta_package(scala_version, delta_version) -> str:
+        """
+        Starting from delta version 3.0.0, the delta package changed its name from delta-core to delta-spark.
+        To be able to maintain and be compatible with older spark versions, this function will point to the right
+        package.
+        :param scala_version: scala version used
+        :param delta_version: delta version used
+        :return: the delta spark maven package to load when creating the spark session
+        """
+        if version.parse(delta_version) >= version.parse("3.0.0"):
+            return f"io.delta:delta-spark_{scala_version}:{delta_version}"
+        return f"io.delta:delta-core_{scala_version}:{delta_version}"

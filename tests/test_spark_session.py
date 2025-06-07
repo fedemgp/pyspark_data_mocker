@@ -1,3 +1,4 @@
+import pytest
 from pyspark.sql import SparkSession
 
 from pyspark_data_mocker.config.app_config import DeltaConfig, SparkConfig
@@ -85,3 +86,14 @@ def test_spark_session_with_delta():
         spark.session.stop()
         # TODO: this is way to ugly but i need it because if not the next tests will use delta configuration
         SparkSession.builder._options = {}
+
+
+@pytest.mark.parametrize("scala_version,delta_version,expected", [
+    ("2.12","2.4.1", "delta-core"),
+    ("2.12","2.3.4", "delta-core"),
+    ("2.12", "3.0.0", "delta-spark"),
+    ("2.12", "4.0.0", "delta-spark")
+])
+def test_get_delta_package(scala_version, delta_version, expected):
+    result = SparkTestSession._get_delta_package(scala_version, delta_version)
+    assert result == f"io.delta:{expected}_{scala_version}:{delta_version}"

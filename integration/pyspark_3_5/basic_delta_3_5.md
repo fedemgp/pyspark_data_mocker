@@ -4,7 +4,7 @@
 
 ```bash
 $ pip freeze | grep pyspark
-pyspark==3.5.1
+pyspark==3.5.6
 <...>
 ```
 
@@ -16,8 +16,7 @@ tests/data/basic_datalake
 |   `-- students.csv
 `-- foo
     `-- exams.csv
-~
-2 directories, 3 files
+<...>
 ```
 
 ## Setup
