@@ -1,9 +1,5 @@
 import logging
 
-# Avoid undesired logs in local execution spark sessions
-logger = logging.getLogger("py4j")
-logger.setLevel(logging.ERROR)
-
 from tempfile import TemporaryDirectory
 from typing import Union
 
@@ -13,6 +9,10 @@ from pyspark.sql import SparkSession
 from pyspark_data_mocker.config.app_config import SparkConfig
 
 Dir = Union[str, TemporaryDirectory]
+
+# Avoid undesired logs in local execution spark sessions
+logger = logging.getLogger("py4j")
+logger.setLevel(logging.ERROR)
 
 
 class SparkTestSession:
