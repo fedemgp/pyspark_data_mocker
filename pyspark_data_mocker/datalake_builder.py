@@ -103,7 +103,7 @@ class DataLakeBuilder:
                 self.spark.sql(f"TRUNCATE TABLE {table['db_name']}.{table['table_name']}")
             self.spark.sql(f"DROP TABLE {table['db_name']}.{table['table_name']}")
         for db in self.dbs:
-            self.spark.sql(f"DROP DATABASE IF EXISTS {db}")
+            self.spark.sql(f"DROP DATABASE IF EXISTS {db} CASCADE")
 
     def load_from_dir(self, datalake_dir: PathLike) -> "DataLakeBuilder":
         """
