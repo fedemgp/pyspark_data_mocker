@@ -56,7 +56,6 @@ $ echo "
 > spark_configuration:
 >    app_name: test_complete
 >    number_of_cores: 4
->    enable_hive: True
 >    warehouse_dir: "/tmp/full_delta_lake"
 >    delta_configuration:
 >        scala_version: '2.12'
@@ -96,10 +95,10 @@ To use a custom configuration, you can pass a `string` or `pathlib.Path` optiona
 'org.apache.spark.sql.delta.catalog.DeltaCatalog'
 
 >>> spark_conf.get("spark.sql.catalogImplementation")
-'hive'
+'in-memory'
 ```
 
-Note that now the spark session now use 4 CPU cores, the delta framework is enabled, and it uses the `hive` catalog
+Note that now the spark session now use 4 CPU cores, the delta framework is enabled, and it uses the `in-memory` catalog
 implementation.
 
 ## Configuration file explanation
@@ -117,7 +116,6 @@ class AppConfig:
 class SparkConfig:
     app_name: str
     number_of_cores: int
-    enable_hive: bool
     warehouse_dir: Dir
     delta_configuration: Optional["DeltaConfig"] = None
 <...>
@@ -165,7 +163,6 @@ much about performance and fine-tuning.
 | config name            | type          | default value                 | description                                                                                                                                                                                                                                                                 |
 |------------------------|---------------|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `number_of_cores`      | INTEGER       | 1                             | change the amount of CPU cores  The spark session will use                                                                                                                                                                                                                  |
-| `enable_hive`          | BOOL          | false                         | Enables the usage of [Apache Hive's catalog](https://spark.apache.org/docs/3.1.1/api/python/reference/api/pyspark.sql.SparkSession.builder.enableHiveSupport.html)                                                                                                          |
 | `warehouse_dir`        | STRING        | tempfile.TemporaryDirectory() | If set, it will create a persistent directory where the wharehouse will live. By default `pyspark_data_mocker` uses a [TemporaryDirectory](https://docs.python.org/3/library/tempfile.html#tempfile.TemporaryDirectory) that will exists as long the builder instance exists |
 | `delta_configuration`  | DELTA_CONFIG  | None                          | If set, it will enable [Delta Lake framework](https://delta.io/)                                                                                                                                                                                                            |
 

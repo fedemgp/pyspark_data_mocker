@@ -14,5 +14,4 @@ def test_default_config():
     assert config.spark_configuration.number_of_cores == 1
 
     assert config.spark_configuration.delta_configuration is None
-    assert not config.spark_configuration.enable_hive
     assert isinstance(config.spark_configuration.warehouse_dir, TemporaryDirectory)

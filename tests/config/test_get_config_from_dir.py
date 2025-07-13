@@ -14,7 +14,6 @@ def test_get_config_returns_a_dataclass_fully_configured(data_dir):
     assert config.spark_configuration.warehouse_dir == "./tmp/foo/bar"
     assert config.spark_configuration.spark_warehouse_dir_path == "tmp/foo/bar/spark_warehouse"
     assert config.spark_configuration.number_of_cores == 1
-    assert config.spark_configuration.enable_hive
     assert config.spark_configuration.delta_configuration.scala_version == "2.12"
     assert config.spark_configuration.delta_configuration.delta_version == "2.0.2"
     assert config.spark_configuration.delta_configuration.snapshot_partitions == 2

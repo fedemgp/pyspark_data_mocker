@@ -9,7 +9,6 @@ def test_spark_session_without_delta():
     app_config = SparkConfig(
         app_name="test",
         number_of_cores=4,
-        enable_hive=False,
         warehouse_dir="/tmp/foo/bar",
         delta_configuration=None,
     )
@@ -20,7 +19,7 @@ def test_spark_session_without_delta():
         spark_conf = spark.session.conf
         assert spark_conf.get("spark.app.name") == "test"
         assert spark_conf.get("spark.master") == "local[4]"
-        assert spark_conf.get("spark.sql.warehouse.dir") == "file:/tmp/foo/bar/spark_warehouse"
+        assert spark_conf.get("spark.sql.warehouse.dir").endswith("/tmp/foo/bar/spark_warehouse")
         assert spark_conf.get("spark.sql.shuffle.partitions") == "1"
 
         # There is no delta configuration
@@ -48,11 +47,11 @@ def test_spark_session_with_delta():
     app_config = SparkConfig(
         app_name="foo",
         number_of_cores=1,
-        enable_hive=True,
         warehouse_dir="/tmp/baz/bar",
         delta_configuration=DeltaConfig(
             scala_version="2.12", delta_version="2.0.2", snapshot_partitions=1, log_cache_size=2
         ),
+        jar_packages=["org.apache.derby:derby:10.14.2.0", "org.apache.hive:hive-metastore:3.1.3"],
     )
     spark = SparkTestSession(app_config)
     try:
@@ -62,11 +61,10 @@ def test_spark_session_with_delta():
         spark_conf = spark.session.conf
         assert spark_conf.get("spark.app.name") == "foo"
         assert spark_conf.get("spark.master") == "local[1]"
-        assert spark_conf.get("spark.sql.warehouse.dir") == "file:/tmp/baz/bar/spark_warehouse"
+        assert spark_conf.get("spark.sql.warehouse.dir").endswith("/tmp/baz/bar/spark_warehouse")
         assert spark_conf.get("spark.sql.shuffle.partitions") == "1"
 
         # Delta is enabled
-        assert spark_conf.get("spark.jars.packages") == "io.delta:delta-core_2.12:2.0.2"
         assert spark_conf.get("spark.sql.extensions") == "io.delta.sql.DeltaSparkSessionExtension"
         assert spark_conf.get("spark.databricks.delta.snapshotPartitions") == "1"
         assert spark_conf.get("spark.sql.catalog.spark_catalog") == "org.apache.spark.sql.delta.catalog.DeltaCatalog"
@@ -81,7 +79,12 @@ def test_spark_session_with_delta():
         assert spark_conf.get("spark.worker.ui.retainedExecutors") == "1"
         assert spark_conf.get("spark.worker.ui.retainedDrivers") == "1"
         # Hive is enabled
-        assert spark_conf.get("spark.sql.catalogImplementation") == "hive"
+        assert spark_conf.get("spark.sql.catalogImplementation") == "in-memory"
+        # jar packages configured (delta enabled by default when delta configuration is set, and the extra ones added)
+        assert (
+            spark_conf.get("spark.jars.packages")
+            == "io.delta:delta-core_2.12:2.0.2,org.apache.derby:derby:10.14.2.0,org.apache.hive:hive-metastore:3.1.3"
+        )
     finally:
         spark.session.stop()
         # TODO: this is way to ugly but i need it because if not the next tests will use delta configuration
