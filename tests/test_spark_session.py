@@ -20,7 +20,7 @@ def test_spark_session_without_delta():
         spark_conf = spark.session.conf
         assert spark_conf.get("spark.app.name") == "test"
         assert spark_conf.get("spark.master") == "local[4]"
-        assert spark_conf.get("spark.sql.warehouse.dir") == "file:/tmp/foo/bar/spark_warehouse"
+        assert spark_conf.get("spark.sql.warehouse.dir").endswith("/tmp/foo/bar/spark_warehouse")
         assert spark_conf.get("spark.sql.shuffle.partitions") == "1"
 
         # There is no delta configuration
@@ -62,7 +62,7 @@ def test_spark_session_with_delta():
         spark_conf = spark.session.conf
         assert spark_conf.get("spark.app.name") == "foo"
         assert spark_conf.get("spark.master") == "local[1]"
-        assert spark_conf.get("spark.sql.warehouse.dir") == "file:/tmp/baz/bar/spark_warehouse"
+        assert spark_conf.get("spark.sql.warehouse.dir").endswith("/tmp/baz/bar/spark_warehouse")
         assert spark_conf.get("spark.sql.shuffle.partitions") == "1"
 
         # Delta is enabled

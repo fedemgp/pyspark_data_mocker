@@ -1,4 +1,9 @@
 import logging
+
+# Avoid undesired logs in local execution spark sessions
+logger = logging.getLogger("py4j")
+logger.setLevel(logging.ERROR)
+
 from tempfile import TemporaryDirectory
 from typing import Union
 
@@ -95,6 +100,18 @@ class SparkTestSession:
         # all cores used (the RAM consumed will be this value times the amount of core used)
         # TODO: parametrize this
         builder = builder.config("spark.driver.memory", "1g")
+
+        # Reduce broadcast timeout to 5 secs in order to speed up low data tests
+        builder = builder.config("spark.sql.broadcastTimeout", "5")
+
+        # Disable arrow for local executions (no need to optimize collects of small chunks of data)
+        builder = builder.config("spark.sql.execution.arrow.pyspark.enabled", "false")
+
+        # Deactivate metrics
+        builder = builder.config("spark.metrics.appStatusSource.enabled", "false")
+        builder = builder.config("spark.cleaner.referenceTracking.cleanCheckpoints", "false")
+        builder = builder.config("spark.dynamicAllocation.enabled", "false")
+
         if config.enable_hive:
             self.log.info("Enabling Hive support")
             builder = builder.enableHiveSupport()
