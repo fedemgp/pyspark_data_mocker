@@ -27,7 +27,6 @@ spark_conf_schema = schema.Schema(
     {
         "app_name": schema.And(str, len),
         "number_of_cores": schema.And(schema.Use(int), range_between(1, 8)),
-        schema.Optional("enable_hive", default=False): bool,
         schema.Optional("warehouse_dir", default=_get_tmp_dir): schema.Or(str, tempfile.TemporaryDirectory),
         schema.Optional("delta_configuration"): {
             "scala_version": schema.Regex(r"\d+\.\d+", error="Scala version must be a supported scala version"),

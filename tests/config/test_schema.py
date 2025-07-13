@@ -28,7 +28,7 @@ def test_spark_config_schema_default_values(mocked_temp_dir):
             "number_of_cores": 1,
         }
     )
-    expected = {"app_name": "foo", "number_of_cores": 1, "enable_hive": False, "warehouse_dir": "/tmp/temp_dir"}
+    expected = {"app_name": "foo", "number_of_cores": 1, "warehouse_dir": "/tmp/temp_dir"}
     assert config == expected
 
 
@@ -54,7 +54,6 @@ def test_validate_schema_add_spark_config_defaults_when_enabled(mocked_temp_dir)
         "spark_configuration": {
             "app_name": "foo",
             "number_of_cores": 1,
-            "enable_hive": False,
             "warehouse_dir": "/tmp/temp_dir",
         },
     }
@@ -68,7 +67,6 @@ def test_validate_schema_returns_successful_configuration():
         "spark_configuration": {
             "app_name": "foo",
             "number_of_cores": 1,
-            "enable_hive": True,
             "warehouse_dir": "/tmp/foo/bar",
             "delta_configuration": {
                 "scala_version": "2.11",
@@ -85,7 +83,6 @@ def test_validate_schema_returns_successful_configuration():
             "spark_configuration": {
                 "app_name": "foo",
                 "number_of_cores": 1,
-                "enable_hive": True,
                 "warehouse_dir": "/tmp/foo/bar",
                 "delta_configuration": {
                     "scala_version": "2.11",
@@ -106,7 +103,6 @@ def test_validate_schema_sets_some_default_values(mocked_temp_dir):
         "spark_configuration": {
             "app_name": "foo",
             "number_of_cores": 1,
-            "enable_hive": False,  # default is False
             "warehouse_dir": "/tmp/temp_dir",
             # Delta doesn't have a default configuration
         },

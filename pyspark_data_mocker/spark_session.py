@@ -61,7 +61,6 @@ class SparkTestSession:
         # -XX:+UseCompressedOops: tells JVM to use 32-bit addresses instead of 64 (if you don't use more that 32GB of
         #                         ram there would not be any problem
         jvm_options = ["-XX:+UseCompressedOops"]
-
         # Enable delta optimizations if configured
         if config.delta_configuration:
             dconfig = config.delta_configuration
@@ -95,9 +94,6 @@ class SparkTestSession:
         # all cores used (the RAM consumed will be this value times the amount of core used)
         # TODO: parametrize this
         builder = builder.config("spark.driver.memory", "1g")
-        if config.enable_hive:
-            self.log.info("Enabling Hive support")
-            builder = builder.enableHiveSupport()
         return builder
 
     @property

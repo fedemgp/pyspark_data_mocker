@@ -17,7 +17,6 @@ class AppConfig:
 class SparkConfig:
     app_name: str
     number_of_cores: int
-    enable_hive: bool
     warehouse_dir: Dir
     delta_configuration: Optional["DeltaConfig"] = None
 

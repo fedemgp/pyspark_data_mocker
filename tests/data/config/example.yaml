@@ -1,7 +1,6 @@
 spark_configuration:
   app_name: "test"
   number_of_cores: 1
-  enable_hive: true
   warehouse_dir: "./tmp/foo/bar"
   delta_configuration:
     scala_version: "2.12"
