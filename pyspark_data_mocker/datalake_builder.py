@@ -1,4 +1,4 @@
-from typing import List, Optional, Set, Union
+from typing import Optional, Set, Union
 
 from pyspark_data_mocker import config, utils
 from pyspark_data_mocker.config import AppConfig
@@ -11,7 +11,7 @@ class DataLakeBuilder:
         self, spark_test: Optional[SparkTestSession] = None, app_config: Optional[Union[AppConfig, PathLike]] = None
     ):
         self.dbs: Set[str] = set()
-        self.tables: List[dict] = list()
+        self.tables: dict[str, dict] = dict()
 
         if not app_config:
             app_config = config.default_config()
@@ -66,7 +66,12 @@ class DataLakeBuilder:
         :return:            An instance of the DataLakeMocker modified, to be able to chain methods
         """
         # TODO: make a dataclass of the table
-        self.tables.append({"path": str(path), "format": fmt, "table_name": table_name, "db_name": db_name})
+        self.tables[f"{db_name}.{table_name}"] = {
+            "path": str(path),
+            "format": fmt,
+            "table_name": table_name,
+            "db_name": db_name,
+        }
         return self
 
     def run(self) -> "DataLakeBuilder":
@@ -78,27 +83,34 @@ class DataLakeBuilder:
         for db in self.dbs:
             self.spark.sql(f"CREATE DATABASE IF NOT EXISTS {db}")
 
-        for table in self.tables:
-            # TODO: configure schema infering
-            opts = dict(header=True, inferSchema=self.app_config.schema.infer)
+        for table in self.tables.values():
             table_full_name = f"{table['db_name']}.{table['table_name']}"
-            reader = self.spark.read
-            if self.schema and table_full_name in self.schema:
-                reader = reader.schema(utils.dict_to_ddl_string(self.schema[table_full_name]))
-            df = reader.format(table["format"]).options(**opts).load(table["path"])
-            writer = df.write
-            # TODO: make it easier
-            if self.spark_test.config and self.spark_test.config.delta_configuration:
-                writer = writer.format("delta")
-            # pyspark in versions 3.5+ got a little bit messier when trying to overwrite a table in a batch mode.
-            # Executing a simple DROP IF EXISTS and then create the table
-            self.spark.sql(f"DROP TABLE IF EXISTS {table_full_name}")
-            writer.saveAsTable(table_full_name)
-
+            self.reset_table(table_full_name)
         return self
 
+    def reset_table(self, table_full_name: str):
+        """
+        Truncate the giving <table_name> and loads it again as it was in the original state
+        :param table_full_name: table name as <database>.<table> form
+        :return:
+        """
+        opts = dict(header=True, inferSchema=self.app_config.schema.infer)
+        table = self.tables[table_full_name]
+        reader = self.spark.read
+        if self.schema and table_full_name in self.schema:
+            reader = reader.schema(utils.dict_to_ddl_string(self.schema[table_full_name]))
+        df = reader.format(table["format"]).options(**opts).load(table["path"])
+        writer = df.write
+        # TODO: make it easier
+        if self.spark_test.config and self.spark_test.config.delta_configuration:
+            writer = writer.format("delta")
+        # pyspark in versions 3.5+ got a little bit messier when trying to overwrite a table in a batch mode.
+        # Executing a simple DROP IF EXISTS and then create the table
+        self.spark.sql(f"DROP TABLE IF EXISTS {table_full_name}")
+        writer.saveAsTable(table_full_name)
+
     def cleanup(self):
-        for table in self.tables:
+        for table in self.tables.values():
             if not self.spark_test.config or not self.spark_test.config.delta_configuration:
                 self.spark.sql(f"TRUNCATE TABLE {table['db_name']}.{table['table_name']}")
             self.spark.sql(f"DROP TABLE {table['db_name']}.{table['table_name']}")
