@@ -19,6 +19,7 @@ class SparkConfig:
     number_of_cores: int
     warehouse_dir: Dir
     delta_configuration: Optional["DeltaConfig"] = None
+    jar_packages: list = dataclasses.field(default_factory=list)
 
     @property
     def spark_warehouse_dir_path(self) -> str:

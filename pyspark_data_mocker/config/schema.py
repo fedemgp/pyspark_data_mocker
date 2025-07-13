@@ -34,6 +34,7 @@ spark_conf_schema = schema.Schema(
             "snapshot_partitions": schema.And(schema.Use(int), range_between(1, 5)),
             "log_cache_size": schema.And(schema.Use(int), range_between(1, 5)),
         },
+        schema.Optional("jar_packages"): schema.And(list),
     }
 )
 

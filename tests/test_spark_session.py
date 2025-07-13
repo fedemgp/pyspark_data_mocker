@@ -51,6 +51,7 @@ def test_spark_session_with_delta():
         delta_configuration=DeltaConfig(
             scala_version="2.12", delta_version="2.0.2", snapshot_partitions=1, log_cache_size=2
         ),
+        jar_packages=["org.apache.derby:derby:10.14.2.0", "org.apache.hive:hive-metastore:3.1.3"],
     )
     spark = SparkTestSession(app_config)
     try:
@@ -64,7 +65,6 @@ def test_spark_session_with_delta():
         assert spark_conf.get("spark.sql.shuffle.partitions") == "1"
 
         # Delta is enabled
-        assert spark_conf.get("spark.jars.packages") == "io.delta:delta-core_2.12:2.0.2"
         assert spark_conf.get("spark.sql.extensions") == "io.delta.sql.DeltaSparkSessionExtension"
         assert spark_conf.get("spark.databricks.delta.snapshotPartitions") == "1"
         assert spark_conf.get("spark.sql.catalog.spark_catalog") == "org.apache.spark.sql.delta.catalog.DeltaCatalog"
@@ -80,6 +80,11 @@ def test_spark_session_with_delta():
         assert spark_conf.get("spark.worker.ui.retainedDrivers") == "1"
         # Hive is enabled
         assert spark_conf.get("spark.sql.catalogImplementation") == "in-memory"
+        # jar packages configured (delta enabled by default when delta configuration is set, and the extra ones added)
+        assert (
+            spark_conf.get("spark.jars.packages")
+            == "io.delta:delta-core_2.12:2.0.2,org.apache.derby:derby:10.14.2.0,org.apache.hive:hive-metastore:3.1.3"
+        )
     finally:
         spark.session.stop()
         # TODO: this is way to ugly but i need it because if not the next tests will use delta configuration

@@ -61,14 +61,15 @@ class SparkTestSession:
         # -XX:+UseCompressedOops: tells JVM to use 32-bit addresses instead of 64 (if you don't use more that 32GB of
         #                         ram there would not be any problem
         jvm_options = ["-XX:+UseCompressedOops"]
+
+        jar_packages = []
         # Enable delta optimizations if configured
         if config.delta_configuration:
             dconfig = config.delta_configuration
             self.log.info(f"Enabling delta configuration using delta version '{dconfig.delta_version}'")
-            delta_package = self._get_delta_package(dconfig.scala_version, dconfig.delta_version)
+            jar_packages.append(self._get_delta_package(dconfig.scala_version, dconfig.delta_version))
             builder = (
-                builder.config("spark.jars.packages", delta_package)
-                .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
+                builder.config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
                 .config("spark.databricks.delta.snapshotPartitions", dconfig.snapshot_partitions)
                 .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
             )
@@ -94,6 +95,12 @@ class SparkTestSession:
         # all cores used (the RAM consumed will be this value times the amount of core used)
         # TODO: parametrize this
         builder = builder.config("spark.driver.memory", "1g")
+
+        if config.jar_packages:
+            jar_packages.extend(config.jar_packages)
+
+        if jar_packages:
+            builder.config("spark.jars.packages", ",".join(jar_packages))
         return builder
 
     @property
