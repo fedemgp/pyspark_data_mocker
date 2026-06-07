@@ -151,7 +151,7 @@ please
 | `infer`       | BOOL   | false              | Enable automatic column type infering                 |
 | `config_file` | STRING | schema_config.yaml | Config file name to read for manual schema definition |
 
-More about schema inferring can be seen [here](https://fedemgp.github.io/Documentation/schema_infering/)
+More about schema inferring can be seen [here](https://fedemgp.github.io/pyspark_data_mocker/Documentation/schema_infering/)
 
 
 ### Spark configuration

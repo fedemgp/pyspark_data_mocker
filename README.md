@@ -135,7 +135,7 @@ You can easily clean the datalake by using the `cleanup` function
 ```
 
 ## Documentation
-You can check the full documentation to use all features available in `pyspark-data-mocker` [here](https://fedemgp.github.io/)
+You can check the full documentation to use all features available in `pyspark-data-mocker` [here](https://fedemgp.github.io/pyspark_data_mocker/)
 
 <!--
 # Restore the previous state
