@@ -6,7 +6,7 @@ authors = ["Federico Gomez <fedemgp@gmail.com>"]
 license = "GPL-3.0"
 readme = "README.md"
 packages = [{include = "pyspark_data_mocker"}]
-homepage = "https://fedemgp.github.io"
+homepage = "https://fedemgp.github.io/pyspark_data_mocker/"
 repository = "https://github.com/fedemgp/pyspark_data_mocker/"
 keywords = ["pyspark", "tests", "data", "mocker"]
 

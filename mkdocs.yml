@@ -1,4 +1,5 @@
 site_name: PySpark data mocker
+site_url: https://fedemgp.github.io/pyspark_data_mocker/
 theme:
   name: readthedocs
   highlightjs: true

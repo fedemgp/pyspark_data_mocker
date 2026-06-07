@@ -18,12 +18,12 @@ $ echo "school.courses:
 -->
 # Schema inferring
 `pyspark-data-mocker` lets you define the schema of the table as you please. You can enable automatic schema inferring
-by setting up the `schema.infer` option in the [configuration file](https://fedemgp.github.io/documentation/configuration#configuration-file-explanation),
+by setting up the `schema.infer` option in the [configuration file](https://fedemgp.github.io/pyspark_data_mocker/documentation/configuration#configuration-file-explanation),
 or you can manually specify the schema of each column you want using another yaml file. By default,
 `pyspark-data-mocker` will consider that all columns are `string` columns
 
 ## Automatic inferring
-This is the simplest configuration. Let's see the example we saw before in the [welcome page](https://fedemgp.github.io)
+This is the simplest configuration. Let's see the example we saw before in the [welcome page](https://fedemgp.github.io/pyspark_data_mocker/)
 with automatic infer schema enabled
 
 ```bash
@@ -81,7 +81,7 @@ will vary depending on their values
 ## Schema configuration file
 This yaml file needs to be located in the folder you will place the datalake definition (the root path you will
 pass to the `DatalakeBuilder` class). By default, the config file that will be used is called `schema_config.yaml`,
-but it can be overriden in the [application configuration file](https://fedemgp.github.io/documentation/configuration#configuration-file-explanation).
+but it can be overriden in the [application configuration file](https://fedemgp.github.io/pyspark_data_mocker/documentation/configuration#configuration-file-explanation).
 
 ```bash
 $ cat ./pyspark_data_mocker/config/schema.py
@@ -107,7 +107,7 @@ tests/data/datalake_with_config_schema
 2 directories, 4 files
 ```
 
-Notice how in this example, unlike the one seen previously in the [Home section](https://fedemgp.github.io) contains a
+Notice how in this example, unlike the one seen previously in the [Home section](https://fedemgp.github.io/pyspark_data_mocker/) contains a
 file `schema_config.yaml`. The content of this file will define the types of each column of the tables.
 
 ```bash
